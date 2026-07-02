@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WAATH Prog">
+<meta name="theme-color" content="#0f1115">
+<title>WAATH — Programme Congé Paternité</title>
+<style>
+
+:root{--bg:#0f1115;--panel:#171a21;--panel2:#1d212b;--line:#2a2f3a;--txt:#e7e9ee;--muted:#9aa3b2;--accent:#ff5a3c;--accent2:#ffc107;--ok:#3ddc84;--link:#6fb3ff;}
+*{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%;}
+a{color:var(--link);}
+.sahdr{position:sticky;top:0;z-index:10;background:var(--panel);border-bottom:1px solid var(--line);padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px;}
+.sahdr h1{margin:0;font-size:16px;white-space:nowrap;}
+.sahdr .dot{color:var(--accent);}
+#prog{display:block !important;padding:18px 20px;padding-bottom:calc(24px + env(safe-area-inset-bottom));}
+@media(max-width:640px){
+  #prog{padding:14px 12px;}
+  .phdr h2{font-size:19px;}
+  .phasestrip{gap:6px;}
+  .phase{min-width:calc(50% - 4px);}
+  .subtabs{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;padding-bottom:4px;}
+  .subtabs button{white-space:nowrap;}
+  .daygrid{grid-template-columns:1fr;}
+  .sesscard,.reg,.gtable,.dutable,.durec,.cues,.drills,.progbar{max-width:none;}
+  .gtable,.dutable{display:block;overflow-x:auto;}
+  .durec input{width:100%;}
+}
+
+/* ===== WAATH Programme view (injected) ===== */
+.viewtoggle { display:flex; gap:6px; margin-left:4px; }
+.viewtoggle button { padding:6px 12px; border-radius:8px; border:1px solid var(--line); background:var(--panel2); color:var(--muted); cursor:pointer; font-size:13px; font-weight:600; white-space:nowrap; }
+.viewtoggle button.active { background:var(--accent); color:#000; border-color:var(--accent); }
+#prog { grid-column:1 / 3; grid-row:2; overflow-y:auto; padding:22px 28px; display:none; }
+body.progmode #tree, body.progmode #pane { display:none; }
+body.progmode #prog { display:block; }
+body.progmode #search { visibility:hidden; }
+.phdr h2 { margin:0 0 4px; font-size:23px; }
+.phdr .sub { color:var(--muted); margin-bottom:10px; font-size:14px; }
+.chips { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
+.chip { font-size:11px; padding:3px 9px; border-radius:20px; background:var(--panel2); border:1px solid var(--line); color:var(--muted); }
+.reg { border-left:3px solid var(--accent2); background:var(--panel2); padding:9px 14px; border-radius:8px; color:var(--muted); font-size:13px; margin:12px 0 18px; max-width:940px; line-height:1.55; }
+.phasestrip { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+.phase { flex:1; min-width:155px; border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:var(--panel2); border-top:3px solid var(--line); }
+.phase b { display:block; font-size:14px; }
+.phase .days { font-size:12px; color:var(--accent2); }
+.phase .goal { font-size:12px; color:var(--muted); margin-top:4px; line-height:1.4; }
+.subtabs { display:flex; gap:6px; margin:6px 0 16px; flex-wrap:wrap; }
+.subtabs button { padding:7px 14px; border-radius:8px; border:1px solid var(--line); background:var(--panel2); color:var(--txt); cursor:pointer; font-size:13px; }
+.subtabs button.active { border-color:var(--accent); color:var(--accent); }
+.progbar { height:8px; background:#0c0e12; border-radius:4px; overflow:hidden; margin:6px 0 16px; max-width:940px; }
+.progbar > i { display:block; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); width:0; transition:width .3s; }
+.daygrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(235px,1fr)); gap:10px; }
+.daycard { border:1px solid var(--line); border-radius:10px; background:var(--panel2); padding:10px 12px; cursor:pointer; transition:border-color .15s; }
+.daycard:hover { border-color:var(--accent2); }
+.daycard.done { border-color:var(--ok); }
+.daycard.sel { border-color:var(--accent); }
+.daycard .dnum { font-size:12px; color:var(--muted); display:flex; justify-content:space-between; }
+.daycard .dtitle { font-weight:600; font-size:14px; margin:4px 0 7px; line-height:1.3; }
+.sesschips { display:flex; flex-wrap:wrap; gap:4px; }
+.tagbadge { font-size:10px; padding:2px 7px; border-radius:5px; text-transform:uppercase; font-weight:700; letter-spacing:.3px; }
+.t-muscu{background:#ff5a3c;color:#000;} .t-force{background:#ffc107;color:#000;}
+.t-grip{background:#c792ea;color:#000;} .t-cardio{background:#6fb3ff;color:#000;}
+.t-skill{background:#3ddc84;color:#000;} .t-recup{background:#4a5568;color:#fff;}
+.t-hopital{background:#8b95a5;color:#000;}
+#daydetail { margin-top:16px; }
+.detailhdr { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:6px 0 10px; }
+.detailhdr h3 { margin:0; font-size:18px; }
+.donebtn { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border:1px solid var(--line); border-radius:8px; background:var(--panel2); color:var(--txt); cursor:pointer; font-size:14px; }
+.donebtn.on { border-color:var(--ok); color:var(--ok); }
+.bankfilter { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+.bankfilter button { padding:5px 12px; border-radius:20px; border:1px solid var(--line); background:var(--panel2); color:var(--muted); cursor:pointer; font-size:12px; }
+.bankfilter button.active { border-color:var(--accent); color:var(--txt); background:#222634; }
+.sesscard { border:1px solid var(--line); border-radius:10px; background:var(--panel2); margin:8px 0; overflow:hidden; max-width:940px; }
+.sesscard > summary { padding:10px 14px; cursor:pointer; list-style:none; display:flex; align-items:center; gap:10px; }
+.sesscard > summary::-webkit-details-marker { display:none; }
+.sesscard .sname { font-weight:600; flex:1; }
+.sesscard .sdur { font-size:12px; color:var(--muted); white-space:nowrap; }
+.sblock { padding:0 16px; }
+.sblock h5 { margin:10px 0 4px; font-size:13px; color:var(--accent2); }
+.sblock ul { margin:0 0 6px; padding-left:18px; }
+.sblock li { font-size:13px; margin:2px 0; }
+.snote { padding:6px 16px 12px; font-size:12px; color:var(--muted); font-style:italic; }
+.gtable, .dutable { border-collapse:collapse; margin:10px 0; width:100%; max-width:940px; }
+.gtable td, .gtable th, .dutable td, .dutable th { border:1px solid var(--line); padding:8px 10px; font-size:13px; text-align:left; vertical-align:top; }
+.gtable th, .dutable th { background:var(--panel2); color:var(--accent2); }
+.durec { display:flex; align-items:center; gap:10px; margin:12px 0; flex-wrap:wrap; background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:12px 14px; max-width:940px; }
+.durec input { width:90px; padding:7px 9px; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--txt); font-size:14px; }
+.durec button { padding:7px 14px; border-radius:8px; border:1px solid var(--accent); background:var(--accent); color:#000; cursor:pointer; font-weight:600; }
+.dubest { color:var(--ok); font-weight:700; font-size:16px; }
+.duhist { font-size:12px; color:var(--muted); margin-top:6px; }
+.cues, .drills { max-width:940px; }
+.cues li, .drills li { font-size:13px; margin:3px 0; }
+.seclabel { font-size:14px; color:var(--accent2); margin:16px 0 4px; font-weight:600; }
+/* video annex */
+.vidannex { margin:4px 16px 12px; border:1px solid var(--line); border-radius:8px; background:var(--bg); overflow:hidden; }
+.vidannex > summary { padding:8px 12px; cursor:pointer; list-style:none; font-size:13px; color:var(--link); font-weight:600; }
+.vidannex > summary::-webkit-details-marker { display:none; }
+.vidlist { display:flex; flex-direction:column; gap:4px; padding:4px 10px 8px; }
+.vidrow { display:flex; align-items:center; gap:10px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:var(--panel2); color:var(--txt); text-decoration:none; }
+.vidrow:hover { border-color:var(--accent); background:#222634; }
+.vplay { color:var(--accent); font-size:12px; }
+.vname { font-size:13px; }
+.vidnote { padding:0 12px 10px; font-size:11px; color:var(--muted); font-style:italic; }
+
+</style>
+</head>
+<body>
+<header class="sahdr"><h1>🏋️ WAATH<span class="dot">.</span> Programme</h1></header>
+<section id="prog"></section>
+<script id="program" type="application/json">{
+  "meta": {
+    "title": "WAATH Hybride — Congé Paternité",
+    "subtitle": "4 semaines · muscle + force + grip · skill double-unders · séances 15-20 min",
+    "durationDays": 28,
+    "goals": [
+      "muscle",
+      "force",
+      "grip",
+      "pectoraux",
+      "jambes",
+      "double-unders"
+    ],
+    "equipment": [
+      "2× KB 12 kg",
+      "1× KB 16 kg",
+      "Rameur Concept2",
+      "Corde à sauter",
+      "Sandbag 50 kg",
+      "Barre suspendue (tractions/hangs)",
+      "Élastiques",
+      "Rouleau + tapis",
+      "Terrasse + jardin"
+    ]
+  },
+  "regulation": "Courbe de forme WAATH : le sommeil dicte l'intensité. Nuit hachée isolée → -5 à -7,5 % (enlève 1-2 intervalles, -1 rep ou levier plus facile). 3+ nuits pourries → bascule sur séance ISO/mobilité (force-iso, recup-mobilite) et décale le pic. On baisse le volume, jamais l'intention : adapter ≠ échouer.",
+  "phases": [
+    {
+      "id": "p0",
+      "name": "Hôpital / Maternité",
+      "days": "J1–J5",
+      "goal": "Maintien sans matériel",
+      "color": "gray",
+      "rules": "1 mini-séance bodyweight/jour en rotation H1→H2→H3 (push / jambes / pull-core-grip) + shadow-skipping quotidien. Silencieux, peu d'espace. RPE 6-7, zéro échec — maintien du timing et du tonus, pas de progression.",
+      "weeklySkeleton": [
+        {
+          "slot": "Jour A (push)",
+          "sessions": [
+            "hop-1",
+            "du-shadow"
+          ]
+        },
+        {
+          "slot": "Jour B (jambes)",
+          "sessions": [
+            "hop-2",
+            "du-shadow"
+          ]
+        },
+        {
+          "slot": "Jour C (pull+core+grip)",
+          "sessions": [
+            "hop-3",
+            "du-shadow"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p1",
+      "name": "Accumulation",
+      "days": "J6–J12",
+      "goal": "Ancrer le volume : reps propres, tempo modéré (3110)",
+      "color": "green",
+      "rules": "Sortie hôpital → volume de qualité. Tempo 3110, 8-10 reps, 3-4 tours, repos 75-90 s. Hepburn : trouver le levier ~4-5RM et le FIXER, tout en ×2 reps. 1 cardio dur max, loin des jambes.",
+      "weeklySkeleton": [
+        {
+          "slot": "Lun",
+          "sessions": [
+            "du-skill",
+            "muscu-jambes",
+            "grip-mini"
+          ]
+        },
+        {
+          "slot": "Mar",
+          "sessions": [
+            "du-skill",
+            "muscu-pecs",
+            "rameur-z2"
+          ]
+        },
+        {
+          "slot": "Mer",
+          "sessions": [
+            "du-skill",
+            "muscu-pull"
+          ]
+        },
+        {
+          "slot": "Jeu",
+          "sessions": [
+            "du-skill",
+            "muscu-push-vertical"
+          ]
+        },
+        {
+          "slot": "Ven",
+          "sessions": [
+            "du-skill",
+            "force-sandbag",
+            "grip-finisher"
+          ]
+        },
+        {
+          "slot": "Sam",
+          "sessions": [
+            "du-skill",
+            "rameur-intervals"
+          ]
+        },
+        {
+          "slot": "Dim",
+          "sessions": [
+            "du-skill",
+            "recup-mobilite"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p2",
+      "name": "Densification / Intensification",
+      "days": "J13–J19",
+      "goal": "Monter le TUT (tempo 4110/33X1) et convertir des intervalles Hepburn en 3 reps",
+      "color": "blue",
+      "rules": "Même charge/levier, on densifie : convertir 2-3 intervalles ×2r en ×3r, tempo plus lent (4110/33X1), repos 75 s. 1 cardio dur (sprint) loin des jambes. Grip : dead hang 5×30 s + towel.",
+      "weeklySkeleton": [
+        {
+          "slot": "Lun",
+          "sessions": [
+            "du-skill",
+            "force-jambes",
+            "grip-mini"
+          ]
+        },
+        {
+          "slot": "Mar",
+          "sessions": [
+            "du-skill",
+            "force-pecs",
+            "rameur-z2"
+          ]
+        },
+        {
+          "slot": "Mer",
+          "sessions": [
+            "du-skill",
+            "force-tirage-grip"
+          ]
+        },
+        {
+          "slot": "Jeu",
+          "sessions": [
+            "du-skill",
+            "force-push-vertical"
+          ]
+        },
+        {
+          "slot": "Ven",
+          "sessions": [
+            "du-skill",
+            "muscu-fullbody",
+            "grip-finisher"
+          ]
+        },
+        {
+          "slot": "Sam",
+          "sessions": [
+            "du-skill",
+            "cond-sprint"
+          ]
+        },
+        {
+          "slot": "Dim",
+          "sessions": [
+            "du-skill",
+            "recup-mobilite"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p3",
+      "name": "Pic",
+      "days": "J20–J26",
+      "goal": "Intensité maximale : amplitude (deficit) + densité (EMOM/Every 4') + Hepburn ×3r puis reset +1 cran",
+      "color": "orange",
+      "rules": "Semaine la plus dure. Deficit push-up + pause, EMOM court (repos 45-60 s), +1 tour. Grip : hang weighted KB16. 1 seul cardio dur (rameur repeats) pour protéger la récup nerveuse.",
+      "weeklySkeleton": [
+        {
+          "slot": "Lun",
+          "sessions": [
+            "du-skill",
+            "muscu-jambes",
+            "grip-mini"
+          ]
+        },
+        {
+          "slot": "Mar",
+          "sessions": [
+            "du-skill",
+            "muscu-pecs",
+            "rameur-z2"
+          ]
+        },
+        {
+          "slot": "Mer",
+          "sessions": [
+            "du-skill",
+            "force-tirage-grip"
+          ]
+        },
+        {
+          "slot": "Jeu",
+          "sessions": [
+            "du-skill",
+            "force-push-vertical"
+          ]
+        },
+        {
+          "slot": "Ven",
+          "sessions": [
+            "du-skill",
+            "force-sandbag",
+            "grip-finisher"
+          ]
+        },
+        {
+          "slot": "Sam",
+          "sessions": [
+            "du-skill",
+            "rameur-repeats"
+          ]
+        },
+        {
+          "slot": "Dim",
+          "sessions": [
+            "du-skill",
+            "recup-mobilite"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p4",
+      "name": "Décharge / Test",
+      "days": "J27–J28",
+      "goal": "Régénération + mesure des progrès",
+      "color": "purple",
+      "rules": "-40 % de volume, tempo 20X1, aucun échec. On teste : max dead hang, bottoms-up press KB16, série de double-unders. Puis on laisse la surcompensation faire son travail.",
+      "weeklySkeleton": [
+        {
+          "slot": "Décharge",
+          "sessions": [
+            "du-skill",
+            "force-iso"
+          ]
+        },
+        {
+          "slot": "Test + récup",
+          "sessions": [
+            "du-skill",
+            "recup-mobilite"
+          ]
+        }
+      ]
+    }
+  ],
+  "sessions": [
+    {
+      "id": "muscu-pecs",
+      "name": "Pecs Pump",
+      "tag": "muscu",
+      "focus": "Pectoraux",
+      "duration": 17,
+      "phases": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Activation (3 min)",
+          "items": [
+            "2 rounds — 8 band pull-apart · 6 scapular push-up · 8 slow push-up"
+          ]
+        },
+        {
+          "label": "Corps (12 min) — superset, 4 tours",
+          "items": [
+            "A1 Deficit push-up (mains KB) tempo 3110 ×8-10",
+            "A2 KB floor press (2×12) tempo 2111 ×12",
+            "repos 60 s"
+          ]
+        },
+        {
+          "label": "Finisher (2 min)",
+          "items": [
+            "Myo-reps push-up : 1 max + 3-4 clusters de 3-4 (repos 15 s)"
+          ]
+        }
+      ],
+      "note": "Poitrine sous les poignées, pause 1 s au sol. Pic : ajouter pause 2 s et raccourcir le repos.",
+      "videos": [
+        {
+          "name": "Band Pull Appart",
+          "url": "https://youtu.be/OQiwmjLT7n8"
+        },
+        {
+          "name": "Push Up",
+          "url": "https://youtu.be/XNd0P6_Dnos"
+        },
+        {
+          "name": "Hands Elevated Push-ups",
+          "url": "https://youtu.be/A2pc0dZc9UE"
+        },
+        {
+          "name": "DB Floor Press",
+          "url": "https://youtu.be/YziboYKum38"
+        }
+      ]
+    },
+    {
+      "id": "muscu-jambes",
+      "name": "Jambes Hypertrophie",
+      "tag": "muscu",
+      "focus": "Jambes",
+      "duration": 20,
+      "phases": [
+        "p1",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Activation (3 min)",
+          "items": [
+            "2 rounds — 6/6 cossack · 8 goblet 31X1 · 6 hip bridge"
+          ]
+        },
+        {
+          "label": "Corps (15 min) — 4 tours",
+          "items": [
+            "B1 Sandbag front squat 50 tempo 33X1 ×8",
+            "B2 Bulgarian split KB goblet 16 tempo 31X1 ×10/10",
+            "repos 75-90 s"
+          ]
+        },
+        {
+          "label": "Finisher (2 min)",
+          "items": [
+            "Wall-sit 40 s + 20 s pulse"
+          ]
+        }
+      ],
+      "note": "Fil rouge squat : S1 8 33X1 → S2 8 43X1 → S3 10 + Bulgarian deficit repos court → S4 6 20X1.",
+      "videos": [
+        {
+          "name": "Cossack Squat",
+          "url": "https://youtu.be/a_wvg44SDuk"
+        },
+        {
+          "name": "Goblet Squat",
+          "url": "https://youtu.be/r7n0KbdXzOE"
+        },
+        {
+          "name": "Single Leg Glute Bridge",
+          "url": "https://youtu.be/kGV5qzQ4TXk"
+        },
+        {
+          "name": "Sandbag Squat",
+          "url": "https://youtu.be/JDPJYHkoNBg"
+        },
+        {
+          "name": "DB Bulgarian Split Squat",
+          "url": "https://youtu.be/9QztbkS-am4"
+        },
+        {
+          "name": "Wall Sit",
+          "url": "https://youtu.be/gGzTJ6HezEI"
+        }
+      ]
+    },
+    {
+      "id": "muscu-jambes-unilat",
+      "name": "Jambes Unilatéral + Chaîne Postérieure",
+      "tag": "muscu",
+      "focus": "Jambes",
+      "duration": 18,
+      "phases": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Activation (3 min)",
+          "items": [
+            "8/8 leg swing · 6/6 single-leg cone touch · 8 KB RDL léger"
+          ]
+        },
+        {
+          "label": "Corps (13 min) — superset, 4 tours",
+          "items": [
+            "F1 Pistol lesté KB12 tempo 30X1 ×5/5 (ou slow ecc 5 s)",
+            "F2 KB single-leg RDL 16 tempo 3011 ×8/8",
+            "repos 75 s"
+          ]
+        },
+        {
+          "label": "Finisher (2 min)",
+          "items": [
+            "Sandbag hip thrust ×20 pause 1 s"
+          ]
+        }
+      ],
+      "note": "Alternative jambes le jour où le sandbag front squat n'est pas dispo. Unilatéral = charge relative >16 kg.",
+      "videos": [
+        {
+          "name": "Lying Leg Swing",
+          "url": "https://youtu.be/N6xaLk3q59M"
+        },
+        {
+          "name": "Single Leg Cone Touch",
+          "url": "https://youtu.be/g9d7b_bp7QA"
+        },
+        {
+          "name": "Dual KB Single Leg Romanian Deadlift",
+          "url": "https://youtu.be/kXadXYsc9PM"
+        },
+        {
+          "name": "Single Leg Hip Trust",
+          "url": "https://youtu.be/HZpkQ74DAFY"
+        }
+      ]
+    },
+    {
+      "id": "muscu-pull",
+      "name": "Pull Dos + Biceps + Grip",
+      "tag": "muscu",
+      "focus": "Dos / Grip",
+      "duration": 18,
+      "phases": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Activation (2 min)",
+          "items": [
+            "20 s dead hang · 8 scapular pull-up · 8 band face-pull"
+          ]
+        },
+        {
+          "label": "Corps (14 min) — EMOM 12', rotation 3 min ×4",
+          "items": [
+            "M1 Weighted pull-up (KB12) 21X1 ×5",
+            "M2 KB gorilla row (2×12) 2111 ×12",
+            "M3 KB Zottman curl (12) 3011 ×10"
+          ]
+        },
+        {
+          "label": "Finisher grip (2 min)",
+          "items": [
+            "3× max dead hang serviette, repos 30 s"
+          ]
+        }
+      ],
+      "note": "Compte comme 1 des 2 séances grip de la semaine.",
+      "videos": [
+        {
+          "name": "Dead Hang",
+          "url": "https://youtu.be/4v33_3tmha4"
+        },
+        {
+          "name": "Weighted Pull-ups",
+          "url": "https://youtu.be/IGAkcF0iA-k"
+        },
+        {
+          "name": "KB Gorilla Row",
+          "url": "https://youtu.be/5MM_KBrIi60"
+        },
+        {
+          "name": "DB Zottman Curl",
+          "url": "https://youtu.be/kEYK6m3oKRA"
+        }
+      ]
+    },
+    {
+      "id": "muscu-push-vertical",
+      "name": "Push Vertical + Triceps",
+      "tag": "muscu",
+      "focus": "Épaules / Triceps",
+      "duration": 16,
+      "phases": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Activation (3 min)",
+          "items": [
+            "2 rounds — 8 band OH press · 5 pike push-up · 20 s wall handstand"
+          ]
+        },
+        {
+          "label": "Corps (11 min) — 4 tours",
+          "items": [
+            "D1 HSPU tempo 30X1 ×5-6 (deficit si facile)",
+            "D2 KB Z-press unilat 16 tempo 3010 ×8/8",
+            "repos 75 s"
+          ]
+        },
+        {
+          "label": "Finisher (2 min)",
+          "items": [
+            "Bottom-of-dip hold 3×15-20 s"
+          ]
+        }
+      ],
+      "note": "Surcharge par amplitude (deficit HSPU) plutôt que par la charge.",
+      "videos": [
+        {
+          "name": "Wall Walks",
+          "url": "https://youtu.be/P2bx6yt32Fk"
+        },
+        {
+          "name": "Seated DB Press",
+          "url": "https://youtu.be/pAmwE_U1i9g"
+        },
+        {
+          "name": "Bottom Of Dip Hold",
+          "url": "https://youtu.be/hnnXbGK8DcI"
+        }
+      ]
+    },
+    {
+      "id": "muscu-fullbody",
+      "name": "Full-Body Densité",
+      "tag": "muscu",
+      "focus": "Full-body",
+      "duration": 20,
+      "phases": [
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Activation (2 min)",
+          "items": [
+            "duck walk 15 m · 8 KB clean léger · 6 no-push-up burpee"
+          ]
+        },
+        {
+          "label": "Corps (16 min) — Every 4 min × 4 (circuit)",
+          "items": [
+            "8 sandbag bear-hug squat 50",
+            "8 deficit push-up 21X1",
+            "8/8 KB single-arm row 16"
+          ]
+        },
+        {
+          "label": "Finisher (2 min)",
+          "items": [
+            "Hollow 40 s + side plank 40 s/côté"
+          ]
+        }
+      ],
+      "note": "Densité = 3e levier d'intensité. Pace soutenable identique sur les 4 rounds.",
+      "videos": [
+        {
+          "name": "Duck Walk",
+          "url": "https://youtu.be/K2tnOjEIqfo"
+        },
+        {
+          "name": "Dual KB Clean",
+          "url": "https://youtu.be/pVlDo0R6lEI"
+        },
+        {
+          "name": "No Push-up Burpees",
+          "url": "https://youtu.be/FE7FvJAMIA4"
+        },
+        {
+          "name": "D-Ball/Sandbag Bear Hug Squat",
+          "url": "https://youtu.be/JDPJYHkoNBg"
+        },
+        {
+          "name": "Hands Elevated Push-ups",
+          "url": "https://youtu.be/A2pc0dZc9UE"
+        },
+        {
+          "name": "Single Arm DB Three Point Row",
+          "url": "https://youtu.be/U3wcDSRMX5c"
+        },
+        {
+          "name": "Hollow Hold",
+          "url": "https://youtu.be/sv2iwl0z9Lk"
+        },
+        {
+          "name": "Side Plank",
+          "url": "https://youtu.be/Z91EziQmfR0"
+        }
+      ]
+    },
+    {
+      "id": "force-jambes",
+      "name": "Force Jambes (Hepburn)",
+      "tag": "force",
+      "focus": "Jambes",
+      "duration": 18,
+      "phases": [
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Warm-up (3 min)",
+          "items": [
+            "5 goblet 30X1 · 8 cossack · 5 glute bridge"
+          ]
+        },
+        {
+          "label": "PART 1 (12 min) — Every 2 min ×6",
+          "items": [
+            "Pistol lesté KB16 goblet 2/jambe tempo 31X1"
+          ]
+        },
+        {
+          "label": "PART 2 (3 min)",
+          "items": [
+            "Nordic curl assisté 3×5 (ecc 4 s) OU sandbag reverse lunge 2×8/jambe"
+          ]
+        }
+      ],
+      "note": "Format signature Hepburn : beaucoup de séries, peu de reps, fraîcheur nerveuse. Repos long intégré.",
+      "videos": [
+        {
+          "name": "Goblet Squat",
+          "url": "https://youtu.be/r7n0KbdXzOE"
+        },
+        {
+          "name": "Cossack Squat",
+          "url": "https://youtu.be/a_wvg44SDuk"
+        },
+        {
+          "name": "Single Leg Glute Bridge",
+          "url": "https://youtu.be/kGV5qzQ4TXk"
+        },
+        {
+          "name": "Ring Hamstring Curl",
+          "url": "https://youtu.be/EuulswylMds"
+        },
+        {
+          "name": "Sandbag Lunges",
+          "url": "https://youtu.be/8O6OnsQLYDg"
+        }
+      ]
+    },
+    {
+      "id": "force-pecs",
+      "name": "Force Pecs / Poussée Horizontale",
+      "tag": "force",
+      "focus": "Pectoraux",
+      "duration": 17,
+      "phases": [
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Warm-up (3 min)",
+          "items": [
+            "10 band pull-apart iso · 8 push-up 3010 · 10 élévations KB"
+          ]
+        },
+        {
+          "label": "PART 1 (12 min) — Every 2 min 30 ×5",
+          "items": [
+            "One-arm push-up négatif 5 s ×2-3/bras OU push-up lesté sandbag 50 ×3-4 tempo 30X1"
+          ]
+        },
+        {
+          "label": "PART 2 (2 min)",
+          "items": [
+            "Déficit push-up sur KB AMRAP"
+          ]
+        }
+      ],
+      "note": "Meilleure source de force pec/triceps sans bench : levier bodyweight avancé.",
+      "videos": [
+        {
+          "name": "Band Pull Appart",
+          "url": "https://youtu.be/OQiwmjLT7n8"
+        },
+        {
+          "name": "Push Up",
+          "url": "https://youtu.be/XNd0P6_Dnos"
+        },
+        {
+          "name": "Elevations Laterales",
+          "url": "https://youtu.be/ncts-kfcgRk"
+        },
+        {
+          "name": "Hands Elevated Push-ups",
+          "url": "https://youtu.be/A2pc0dZc9UE"
+        }
+      ]
+    },
+    {
+      "id": "force-tirage-grip",
+      "name": "Force Tirage Vertical + Grip",
+      "tag": "force",
+      "focus": "Dos / Grip",
+      "duration": 18,
+      "phases": [
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Warm-up (2 min)",
+          "items": [
+            "8 bent-over row KB12 3013 · 5 scap pull · 15 s hollow"
+          ]
+        },
+        {
+          "label": "PART 1 (13 min) — Every 2 min 30 ×5",
+          "items": [
+            "Weighted pull-up KB16/sandbag 2 reps tempo 31X1"
+          ]
+        },
+        {
+          "label": "PART 2 grip (3 min)",
+          "items": [
+            "Dead hang 90-120 s cumulé"
+          ]
+        }
+      ],
+      "note": "Compte comme 1 des 2 séances grip de la semaine.",
+      "videos": [
+        {
+          "name": "Bent Over Row",
+          "url": "https://youtu.be/-Wj3Np8vViU"
+        },
+        {
+          "name": "Hollow Hold",
+          "url": "https://youtu.be/sv2iwl0z9Lk"
+        },
+        {
+          "name": "Weighted Pull-ups",
+          "url": "https://youtu.be/IGAkcF0iA-k"
+        },
+        {
+          "name": "Dead Hang",
+          "url": "https://youtu.be/4v33_3tmha4"
+        }
+      ]
+    },
+    {
+      "id": "force-sandbag",
+      "name": "Force Unilatérale Sandbag",
+      "tag": "force",
+      "focus": "Full-body / Grip",
+      "duration": 16,
+      "phases": [
+        "p1",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Warm-up (2 min)",
+          "items": [
+            "6 windmill/côté · 8 KB clean/côté · 6 burpees"
+          ]
+        },
+        {
+          "label": "PART 1 (12 min) — Every 2 min ×6",
+          "items": [
+            "Sandbag shoulder clean 50 ×2 + 20 m bear-hug carry (alterne épaule)"
+          ]
+        },
+        {
+          "label": "PART 2 (2 min)",
+          "items": [
+            "Suitcase carry KB16 2×20 m/côté"
+          ]
+        }
+      ],
+      "note": "Charge la plus lourde dispo + carries synergiques grip.",
+      "videos": [
+        {
+          "name": "KB Windmill",
+          "url": "https://youtu.be/-eX6Yi3ok6c"
+        },
+        {
+          "name": "Dual KB Clean",
+          "url": "https://youtu.be/pVlDo0R6lEI"
+        },
+        {
+          "name": "No Push-up Burpees",
+          "url": "https://youtu.be/FE7FvJAMIA4"
+        },
+        {
+          "name": "Sandbag/D-ball Ground to Over Shoulder",
+          "url": "https://youtu.be/OlAfCW8SZr8"
+        },
+        {
+          "name": "Sandbag ou D-Ball Bear Hug Carry",
+          "url": "https://youtu.be/zyXGZRqagNI"
+        },
+        {
+          "name": "Single Arm Farmer Carry",
+          "url": "https://youtu.be/Exgv3MF4PC0"
+        }
+      ]
+    },
+    {
+      "id": "force-push-vertical",
+      "name": "Force Poussée Verticale (au-delà HSPU)",
+      "tag": "force",
+      "focus": "Épaules",
+      "duration": 18,
+      "phases": [
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Warm-up (3 min)",
+          "items": [
+            "10 half-kneeling bottoms-up press · 8 pike push-up · 10 band pull-apart"
+          ]
+        },
+        {
+          "label": "PART 1 (12 min) — Every 2 min 30 ×5",
+          "items": [
+            "HSPU déficit (mains sur KB) 2-3 reps tempo 31X1 pause 1 s"
+          ]
+        },
+        {
+          "label": "PART 2 (3 min)",
+          "items": [
+            "Wall walk 3×1 + top hold 15 s OU pseudo-planche lean 3×15 s"
+          ]
+        }
+      ],
+      "note": "Progression : HSPU strict → tempo → déficit → déficit+pause → lesté.",
+      "videos": [
+        {
+          "name": "Half Kneeling KB Bottom Up Press",
+          "url": "https://youtu.be/UapWeW5szVM"
+        },
+        {
+          "name": "Band Pull Appart",
+          "url": "https://youtu.be/OQiwmjLT7n8"
+        },
+        {
+          "name": "Wall Walks",
+          "url": "https://youtu.be/P2bx6yt32Fk"
+        },
+        {
+          "name": "Leaning Plank",
+          "url": "https://youtu.be/r3fjhnUvD1g"
+        }
+      ]
+    },
+    {
+      "id": "force-iso",
+      "name": "Force de Position / ISO (récup active)",
+      "tag": "force",
+      "focus": "Force de position",
+      "duration": 15,
+      "phases": [
+        "p2",
+        "p3",
+        "p4"
+      ],
+      "blocks": [
+        {
+          "label": "Warm-up (2 min)",
+          "items": [
+            "Mobilité générale épaules / hanches"
+          ]
+        },
+        {
+          "label": "PART 1 (10 min) — 4 rounds, repos 1 min",
+          "items": [
+            "Bottom dip hold 15-25 s",
+            "Mid pull-up hold 10-15 s",
+            "Wall-sit lesté KB16 30 s"
+          ]
+        },
+        {
+          "label": "PART 2 (3 min)",
+          "items": [
+            "Front lever tuck 4×8-10 s + towel hang 2×15 s"
+          ]
+        }
+      ],
+      "note": "Séance jour sommeil dégradé OU décharge S4. Faible coût nerveux, entretient la force de position.",
+      "videos": [
+        {
+          "name": "Bottom Of Dip Hold",
+          "url": "https://youtu.be/hnnXbGK8DcI"
+        },
+        {
+          "name": "Middle of Pull-ups Hold",
+          "url": "https://youtu.be/7dgV6D_iP1s"
+        },
+        {
+          "name": "Wall Sit",
+          "url": "https://youtu.be/gGzTJ6HezEI"
+        },
+        {
+          "name": "Dead Hang",
+          "url": "https://youtu.be/4v33_3tmha4"
+        }
+      ]
+    },
+    {
+      "id": "grip-mini",
+      "name": "Grip — Mini-séance",
+      "tag": "grip",
+      "focus": "Grip",
+      "duration": 14,
+      "phases": [
+        "p1",
+        "p2",
+        "p3",
+        "p4"
+      ],
+      "blocks": [
+        {
+          "label": "Support / suspension (5 min)",
+          "items": [
+            "Dead hang selon semaine (S1 5×20 s → S3 weighted KB16 4×30 s → S4 test max)",
+            "Towel hang 2×15-20 s (fat grip)"
+          ]
+        },
+        {
+          "label": "Crushing / carry (5 min)",
+          "items": [
+            "Farmer/offset carry selon semaine (S1 2×12 3×30 m → S3 bear-hug 50)",
+            "Bottoms-up KB press & hold (12→16)"
+          ]
+        },
+        {
+          "label": "Pinch (3-4 min)",
+          "items": [
+            "Sandbag pinch carry/hold",
+            "Pinch hold 3×20-30 s selon semaine"
+          ]
+        }
+      ],
+      "note": "Voir gripProgression pour les charges/durées exactes de la semaine en cours. 3 familles : support / crushing / pinch.",
+      "videos": [
+        {
+          "name": "Dead Hang",
+          "url": "https://youtu.be/4v33_3tmha4"
+        },
+        {
+          "name": "KB Farmer Carry",
+          "url": "https://youtu.be/jvwW_sGHz9w"
+        },
+        {
+          "name": "Single Arm KB Bottom up Press",
+          "url": "https://youtu.be/XID4mhVZgPk"
+        },
+        {
+          "name": "Plate Pinch Grip Carry",
+          "url": "https://youtu.be/W78q6P0kejQ"
+        },
+        {
+          "name": "Sandbag ou D-Ball Bear Hug Carry",
+          "url": "https://youtu.be/zyXGZRqagNI"
+        }
+      ]
+    },
+    {
+      "id": "grip-finisher",
+      "name": "Grip — Finisher",
+      "tag": "grip",
+      "focus": "Grip",
+      "duration": 5,
+      "phases": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Finisher (4-6 min)",
+          "items": [
+            "3× max dead hang serviette, repos 30 s",
+            "OU bottoms-up press 3×5/bras (12→16)",
+            "OU pinch hold 3×20-30 s"
+          ]
+        }
+      ],
+      "note": "Accroché en 2e créneau d'un jour tirage/sandbag. Assure la 2e dose grip de la semaine.",
+      "videos": [
+        {
+          "name": "Dead Hang",
+          "url": "https://youtu.be/4v33_3tmha4"
+        },
+        {
+          "name": "Single Arm KB Bottom up Press",
+          "url": "https://youtu.be/XID4mhVZgPk"
+        },
+        {
+          "name": "Plate Pinch Grip Carry",
+          "url": "https://youtu.be/W78q6P0kejQ"
+        }
+      ]
+    },
+    {
+      "id": "rameur-z2",
+      "name": "Rameur Z2 Steady-state",
+      "tag": "cardio",
+      "focus": "Aérobie Z2",
+      "duration": 15,
+      "phases": [
+        "p1",
+        "p2",
+        "p3",
+        "p4"
+      ],
+      "blocks": [
+        {
+          "label": "Steady-state (15 min)",
+          "items": [
+            "15 min continu @2:10-2:20/500m · 20 spm · respiration nasale · ratio drive/recovery ≈ 1:2"
+          ]
+        }
+      ],
+      "note": "Le Z2 doit RESTER facile — si tu peux à peine parler, tu es trop haut. Zéro coût récup, plaçable partout.",
+      "videos": []
+    },
+    {
+      "id": "rameur-repeats",
+      "name": "Rameur 500 m Repeats (VO2)",
+      "tag": "cardio",
+      "focus": "VO2 / seuil",
+      "duration": 18,
+      "phases": [
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Warm-up (3 min)",
+          "items": [
+            "Rame lente + 3 accélérations progressives"
+          ]
+        },
+        {
+          "label": "Corps (12 min)",
+          "items": [
+            "5×500 m @1:52-1:58 · 28 spm · repos 1:30 rame lente"
+          ]
+        },
+        {
+          "label": "Retour au calme (3 min)",
+          "items": [
+            "Rame très lente"
+          ]
+        }
+      ],
+      "note": "Cardio DUR : 1er 500 = même split que le 5e (pacing). Loin d'une séance jambes lourde.",
+      "videos": []
+    },
+    {
+      "id": "rameur-intervals",
+      "name": "Rameur 1'/1' Intervalles",
+      "tag": "cardio",
+      "focus": "Seuil",
+      "duration": 16,
+      "phases": [
+        "p1",
+        "p2"
+      ],
+      "blocks": [
+        {
+          "label": "Corps (16 min)",
+          "items": [
+            "8 rounds — 1 min seuil (2:00-2:05, 25 spm) / 1 min 2:20 lent",
+            "Variante dure : 1 min ON / 30 s OFF (loin des jambes)"
+          ]
+        }
+      ],
+      "note": "Cardio DUR : effort constant sur tous les intervalles, pas d'explosion au round 1.",
+      "videos": []
+    },
+    {
+      "id": "rameur-pyramide",
+      "name": "Rameur Pyramide",
+      "tag": "cardio",
+      "focus": "Mixte",
+      "duration": 18,
+      "phases": [
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Corps (18 min)",
+          "items": [
+            "250-500-750-500-250 m · repos = durée de l'effort qui vient de finir · ~26-28 spm sur les intervalles courts"
+          ]
+        }
+      ],
+      "note": "Cardio DUR alternatif. Split plus rapide sur les tronçons courts.",
+      "videos": []
+    },
+    {
+      "id": "cond-rameur-corde",
+      "name": "Conditioning Rameur + Corde",
+      "tag": "cardio",
+      "focus": "Metcon léger + skill",
+      "duration": 16,
+      "phases": [
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Corps (16 min) — 3 rounds pace constant",
+          "items": [
+            "400 m rameur @2:05",
+            "40 DU (ou 80 singles)",
+            "repos 1:00"
+          ]
+        }
+      ],
+      "note": "Intègre les DU dans un metcon léger (objectif S4). Skill en condition de fatigue modérée.",
+      "videos": [
+        {
+          "name": "Double-Unders",
+          "url": "https://youtu.be/Fn8aL129_UQ"
+        }
+      ]
+    },
+    {
+      "id": "cond-carries",
+      "name": "Jardin + Carries (endurance de force)",
+      "tag": "cardio",
+      "focus": "Endurance de force / Grip",
+      "duration": 18,
+      "phases": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Corps (18 min) — EMOM 18'",
+          "items": [
+            "min 1 : 20 m sandbag bear-hug carry (50)",
+            "min 2 : 40 m sprint jardin @85%",
+            "min 3 : 40 m KB farmer carry (16+12)"
+          ]
+        }
+      ],
+      "note": "Synergique grip (priorité). Pace soutenable identique sur tout l'EMOM. 2e séance d'un jour tirage.",
+      "videos": [
+        {
+          "name": "Sandbag ou D-Ball Bear Hug Carry",
+          "url": "https://youtu.be/zyXGZRqagNI"
+        },
+        {
+          "name": "KB Farmer Carry",
+          "url": "https://youtu.be/jvwW_sGHz9w"
+        }
+      ]
+    },
+    {
+      "id": "cond-sprint",
+      "name": "Sprint Intervalles",
+      "tag": "cardio",
+      "focus": "Puissance / VO2",
+      "duration": 15,
+      "phases": [
+        "p2"
+      ],
+      "blocks": [
+        {
+          "label": "Échauffement (3 min)",
+          "items": [
+            "Singles + montées de genoux"
+          ]
+        },
+        {
+          "label": "Corps (10 min)",
+          "items": [
+            "8× (30 s course rapide / 30 s marche)"
+          ]
+        },
+        {
+          "label": "Finisher (2 min)",
+          "items": [
+            "Max DU en clusters"
+          ]
+        }
+      ],
+      "note": "Cardio DUR : ≥6 h d'écart / autre jour qu'une séance jambes. Jamais la veille des jambes.",
+      "videos": [
+        {
+          "name": "Double-Unders",
+          "url": "https://youtu.be/Fn8aL129_UQ"
+        }
+      ]
+    },
+    {
+      "id": "recup-mobilite",
+      "name": "Récup Active + Mobilité",
+      "tag": "recup",
+      "focus": "Récupération",
+      "duration": 16,
+      "phases": [
+        "p1",
+        "p2",
+        "p3",
+        "p4"
+      ],
+      "blocks": [
+        {
+          "label": "Rameur Z2 (6 min)",
+          "items": [
+            "6 min rameur très lent, respiration nasale"
+          ]
+        },
+        {
+          "label": "Mobilité + rouleau (8-10 min)",
+          "items": [
+            "Quadris / ischios / dorsaux / avant-bras 60 s/zone",
+            "Cossack 6/6",
+            "Jefferson curl / dead hang 2×20 s",
+            "Ouverture épaules élastique"
+          ]
+        }
+      ],
+      "note": "Zéro intensité. Lendemain de séance dure ou jour de nuit blanche.",
+      "videos": [
+        {
+          "name": "DB Crossing Jefferson Curl",
+          "url": "https://youtu.be/JT5fhAakEHw"
+        },
+        {
+          "name": "Dead Hang",
+          "url": "https://youtu.be/4v33_3tmha4"
+        },
+        {
+          "name": "Banded Shoulder Flow",
+          "url": "https://youtu.be/18mfTn_jssU"
+        },
+        {
+          "name": "Cossack Squat",
+          "url": "https://youtu.be/a_wvg44SDuk"
+        }
+      ]
+    },
+    {
+      "id": "du-skill",
+      "name": "Skill Double-Unders",
+      "tag": "skill",
+      "focus": "Double-unders",
+      "duration": 10,
+      "phases": [
+        "p1",
+        "p2",
+        "p3",
+        "p4"
+      ],
+      "blocks": [
+        {
+          "label": "Mini-séance (10 min, à froid)",
+          "items": [
+            "1 min single-unders relâchés",
+            "3 min drill du jour (selon semaine)",
+            "5 min EMOM : chaque min = meilleure série DU, noter, repos le reste",
+            "1 min singles faciles + secouer les avant-bras"
+          ]
+        }
+      ],
+      "note": "À FROID, avant fatigue, jamais en fin de grosse séance. Coudes collés, rotation par les poignets, saut droit gainé. Toujours finir sur une réussite. Noter le record.",
+      "videos": [
+        {
+          "name": "Double-Unders",
+          "url": "https://youtu.be/Fn8aL129_UQ"
+        }
+      ]
+    },
+    {
+      "id": "du-shadow",
+      "name": "Shadow Skipping (sans corde)",
+      "tag": "skill",
+      "focus": "Double-unders",
+      "duration": 5,
+      "phases": [
+        "p0"
+      ],
+      "blocks": [
+        {
+          "label": "Shadow (3-5 × 30 s)",
+          "items": [
+            "Poignets miment la rotation, coudes collés, sauts silencieux pointe de pieds",
+            "Mime single → double → penguin-tap-jump"
+          ]
+        },
+        {
+          "label": "Footwork",
+          "items": [
+            "Ali shuffle · side-to-side · boxer step — 30 s chacun"
+          ]
+        }
+      ],
+      "note": "Entretient 100 % du timing DU sans corde et sans bruit. Plusieurs fois/jour à l'hôpital.",
+      "videos": [
+        {
+          "name": "Double-Unders",
+          "url": "https://youtu.be/Fn8aL129_UQ"
+        }
+      ]
+    },
+    {
+      "id": "hop-1",
+      "name": "Hôpital — Push bodyweight",
+      "tag": "hopital",
+      "focus": "Poussée",
+      "duration": 12,
+      "phases": [
+        "p0"
+      ],
+      "blocks": [
+        {
+          "label": "Corps (10-12 min) — 2-3 tours, repos 60 s",
+          "items": [
+            "Push-up tempo 4210 ×8-12",
+            "Deficit push-up (mains sur chaises) ×8-10",
+            "Pike push-up 3110 ×6-8",
+            "Iso push-up hold mi-course 20-30 s",
+            "Pseudo-planche lean 3×15-20 s"
+          ]
+        }
+      ],
+      "note": "Silencieux, dans la chambre. RPE 6-7, zéro échec — maintien.",
+      "videos": [
+        {
+          "name": "Push Up",
+          "url": "https://youtu.be/XNd0P6_Dnos"
+        },
+        {
+          "name": "Hands Elevated Push-ups",
+          "url": "https://youtu.be/A2pc0dZc9UE"
+        },
+        {
+          "name": "Leaning Plank",
+          "url": "https://youtu.be/r3fjhnUvD1g"
+        }
+      ]
+    },
+    {
+      "id": "hop-2",
+      "name": "Hôpital — Jambes bodyweight",
+      "tag": "hopital",
+      "focus": "Jambes",
+      "duration": 12,
+      "phases": [
+        "p0"
+      ],
+      "blocks": [
+        {
+          "label": "Corps (10-12 min) — 2-3 tours, repos 60 s",
+          "items": [
+            "Pistol tempo 30X1 ×5/5 (ou slow ecc 5 s)",
+            "Bulgarian split (pied sur chaise) 31X1 ×10/10",
+            "Slow squat 4020 ×15",
+            "Wall-sit 45 s"
+          ]
+        }
+      ],
+      "note": "Aucun matériel. Tempo et unilatéral compensent l'absence de charge.",
+      "videos": [
+        {
+          "name": "Wall Sit",
+          "url": "https://youtu.be/gGzTJ6HezEI"
+        },
+        {
+          "name": "DB Bulgarian Split Squat",
+          "url": "https://youtu.be/9QztbkS-am4"
+        },
+        {
+          "name": "Air Squat",
+          "url": "https://youtu.be/zMYAEpd6_Os"
+        }
+      ]
+    },
+    {
+      "id": "hop-3",
+      "name": "Hôpital — Pull + Core + Grip iso",
+      "tag": "hopital",
+      "focus": "Tirage / Core / Grip",
+      "duration": 10,
+      "phases": [
+        "p0"
+      ],
+      "blocks": [
+        {
+          "label": "Corps (8-10 min), repos 45 s",
+          "items": [
+            "Table/desk row 21X1 ×10 OU towel isometric row 5×20 s",
+            "Superman hold + rows 30 s",
+            "Hollow 30-40 s",
+            "Dead bug lent 10/10",
+            "Side plank 30 s/côté"
+          ]
+        },
+        {
+          "label": "Grip iso (sans barre)",
+          "items": [
+            "Towel isometric pull 5×15-20 s",
+            "Serviette roulée crush hold 4×20 s/main",
+            "Pince livre/bouteille 4×20 s"
+          ]
+        }
+      ],
+      "note": "Maintient tirage, gainage et grip sans aucun matériel.",
+      "videos": [
+        {
+          "name": "Body Row",
+          "url": "https://youtu.be/BMwSS8PoTuE"
+        },
+        {
+          "name": "Alternating Dead Bug",
+          "url": "https://youtu.be/PG4EdAwCAPw"
+        },
+        {
+          "name": "Side Plank",
+          "url": "https://youtu.be/Z91EziQmfR0"
+        },
+        {
+          "name": "Hollow Hold",
+          "url": "https://youtu.be/sv2iwl0z9Lk"
+        },
+        {
+          "name": "Plate Pinch Grip Carry",
+          "url": "https://youtu.be/W78q6P0kejQ"
+        }
+      ]
+    }
+  ],
+  "calendar": [
+    {
+      "day": 1,
+      "phase": "p0",
+      "title": "Hôpital — Push bodyweight",
+      "sessions": [
+        "hop-1",
+        "du-shadow"
+      ]
+    },
+    {
+      "day": 2,
+      "phase": "p0",
+      "title": "Hôpital — Jambes bodyweight",
+      "sessions": [
+        "hop-2",
+        "du-shadow"
+      ]
+    },
+    {
+      "day": 3,
+      "phase": "p0",
+      "title": "Hôpital — Pull + core + grip iso",
+      "sessions": [
+        "hop-3",
+        "du-shadow"
+      ]
+    },
+    {
+      "day": 4,
+      "phase": "p0",
+      "title": "Hôpital — Push bodyweight",
+      "sessions": [
+        "hop-1",
+        "du-shadow"
+      ]
+    },
+    {
+      "day": 5,
+      "phase": "p0",
+      "title": "Hôpital — Jambes bodyweight",
+      "sessions": [
+        "hop-2",
+        "du-shadow"
+      ]
+    },
+    {
+      "day": 6,
+      "phase": "p1",
+      "title": "Jambes hypertrophie + grip",
+      "sessions": [
+        "du-skill",
+        "muscu-jambes",
+        "grip-mini"
+      ]
+    },
+    {
+      "day": 7,
+      "phase": "p1",
+      "title": "Pecs pump + rameur Z2",
+      "sessions": [
+        "du-skill",
+        "muscu-pecs",
+        "rameur-z2"
+      ]
+    },
+    {
+      "day": 8,
+      "phase": "p1",
+      "title": "Pull dos + biceps + grip",
+      "sessions": [
+        "du-skill",
+        "muscu-pull"
+      ]
+    },
+    {
+      "day": 9,
+      "phase": "p1",
+      "title": "Push vertical + triceps",
+      "sessions": [
+        "du-skill",
+        "muscu-push-vertical"
+      ]
+    },
+    {
+      "day": 10,
+      "phase": "p1",
+      "title": "Force sandbag + grip finisher",
+      "sessions": [
+        "du-skill",
+        "force-sandbag",
+        "grip-finisher"
+      ]
+    },
+    {
+      "day": 11,
+      "phase": "p1",
+      "title": "Rameur intervalles (cardio dur)",
+      "sessions": [
+        "du-skill",
+        "rameur-intervals"
+      ]
+    },
+    {
+      "day": 12,
+      "phase": "p1",
+      "title": "Récup + mobilité",
+      "sessions": [
+        "du-skill",
+        "recup-mobilite"
+      ]
+    },
+    {
+      "day": 13,
+      "phase": "p2",
+      "title": "Force jambes (Hepburn) + grip",
+      "sessions": [
+        "du-skill",
+        "force-jambes",
+        "grip-mini"
+      ]
+    },
+    {
+      "day": 14,
+      "phase": "p2",
+      "title": "Force pecs + rameur Z2",
+      "sessions": [
+        "du-skill",
+        "force-pecs",
+        "rameur-z2"
+      ]
+    },
+    {
+      "day": 15,
+      "phase": "p2",
+      "title": "Force tirage + grip",
+      "sessions": [
+        "du-skill",
+        "force-tirage-grip"
+      ]
+    },
+    {
+      "day": 16,
+      "phase": "p2",
+      "title": "Force poussée verticale",
+      "sessions": [
+        "du-skill",
+        "force-push-vertical"
+      ]
+    },
+    {
+      "day": 17,
+      "phase": "p2",
+      "title": "Full-body densité + grip finisher",
+      "sessions": [
+        "du-skill",
+        "muscu-fullbody",
+        "grip-finisher"
+      ]
+    },
+    {
+      "day": 18,
+      "phase": "p2",
+      "title": "Sprint intervalles (cardio dur)",
+      "sessions": [
+        "du-skill",
+        "cond-sprint"
+      ]
+    },
+    {
+      "day": 19,
+      "phase": "p2",
+      "title": "Récup + mobilité",
+      "sessions": [
+        "du-skill",
+        "recup-mobilite"
+      ]
+    },
+    {
+      "day": 20,
+      "phase": "p3",
+      "title": "Jambes pic (deficit/EMOM) + grip",
+      "sessions": [
+        "du-skill",
+        "muscu-jambes",
+        "grip-mini"
+      ]
+    },
+    {
+      "day": 21,
+      "phase": "p3",
+      "title": "Pecs pic (deficit+pause) + rameur Z2",
+      "sessions": [
+        "du-skill",
+        "muscu-pecs",
+        "rameur-z2"
+      ]
+    },
+    {
+      "day": 22,
+      "phase": "p3",
+      "title": "Force tirage + grip",
+      "sessions": [
+        "du-skill",
+        "force-tirage-grip"
+      ]
+    },
+    {
+      "day": 23,
+      "phase": "p3",
+      "title": "Force poussée verticale",
+      "sessions": [
+        "du-skill",
+        "force-push-vertical"
+      ]
+    },
+    {
+      "day": 24,
+      "phase": "p3",
+      "title": "Force sandbag + grip finisher",
+      "sessions": [
+        "du-skill",
+        "force-sandbag",
+        "grip-finisher"
+      ]
+    },
+    {
+      "day": 25,
+      "phase": "p3",
+      "title": "Rameur 500 m repeats (cardio dur)",
+      "sessions": [
+        "du-skill",
+        "rameur-repeats"
+      ]
+    },
+    {
+      "day": 26,
+      "phase": "p3",
+      "title": "Récup + mobilité",
+      "sessions": [
+        "du-skill",
+        "recup-mobilite"
+      ]
+    },
+    {
+      "day": 27,
+      "phase": "p4",
+      "title": "Décharge — force iso + test grip",
+      "sessions": [
+        "du-skill",
+        "force-iso"
+      ]
+    },
+    {
+      "day": 28,
+      "phase": "p4",
+      "title": "Test double-unders + récup",
+      "sessions": [
+        "du-skill",
+        "recup-mobilite"
+      ]
+    }
+  ],
+  "doubleUnder": {
+    "current": "~1 réussi sur 5",
+    "weeks": [
+      {
+        "week": 1,
+        "focus": "Fondations + DU isolé",
+        "goal": "50 singles propres ; penguin taps OK ; DU isolé 8/10"
+      },
+      {
+        "week": 2,
+        "focus": "Clusters courts",
+        "goal": "3-5 DU consécutifs répétables ; single+DU fluide 1 min"
+      },
+      {
+        "week": 3,
+        "focus": "Extension",
+        "goal": "Séries 8-10 DU ; premier '10 unbroken'"
+      },
+      {
+        "week": 4,
+        "focus": "Fiabilité",
+        "goal": "Séries 15-20 DU ; placer des DU en metcon léger"
+      }
+    ],
+    "drills": [
+      "single-unders rythmés",
+      "high singles",
+      "penguin taps",
+      "penguin tap→saut (tap-tap-jump)",
+      "1 DU isolé",
+      "clusters (1s+1DU → 2→3→5)",
+      "séries non-stop 5→10→15→20"
+    ],
+    "cues": [
+      "coudes collés, rotation par les poignets (petits cercles)",
+      "éliminer le double bounce : 1 saut = 1 unité",
+      "saut droit gainé, pointes de pieds",
+      "tourner plus vite, pas plus haut (+5-8 cm suffisent)",
+      "2e coup de poignet au sommet du saut",
+      "regard horizon, prise relâchée"
+    ]
+  },
+  "gripProgression": [
+    {
+      "week": 1,
+      "hang": "5×20 s (100 s)",
+      "carry": "Farmer 2×12, 3×30 m",
+      "other": "Bottoms-up hold 3×15 s/bras (12) ; pinch hold 3×20 s"
+    },
+    {
+      "week": 2,
+      "hang": "5×30 s (150 s) + 2×15 s towel",
+      "carry": "Offset 12+16 3×40 m + suitcase 16 2×20 m/côté",
+      "other": "Bottoms-up press 3×5/bras (12) ; pinch carry 3×20 m"
+    },
+    {
+      "week": 3,
+      "hang": "4×30 s weighted KB16 (120 s) + 3×20 s towel",
+      "carry": "Farmer 2×12 3×50 m rapide + bear-hug 50 3×20 m",
+      "other": "Bottoms-up press 3×4/bras (16) ; pinch hold 3×30 s"
+    },
+    {
+      "week": 4,
+      "hang": "Test max hang + 3×25 s ; one-arm assisté 3×10 s/bras ; puis -40 %",
+      "carry": "Bear-hug 50 + offset ; décharge",
+      "other": "Bottoms-up press test (16) ; pinch max hold"
+    }
+  ]
+}</script>
+<script>
+/* ===== WAATH Programme view (injected) ===== */
+(function(){
+"use strict";
+const PROG = JSON.parse(document.getElementById("program").textContent);
+const PKEY = "waath_prog_v1";
+let PS = ploadState();
+function ploadState(){ try{ return Object.assign({days:{},du:{}}, JSON.parse(localStorage.getItem(PKEY)||"{}")); }catch(e){ return {days:{},du:{}}; } }
+function psave(){ localStorage.setItem(PKEY, JSON.stringify(PS)); }
+const pe = s => (s||"").replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const SMAP = {}; PROG.sessions.forEach(s=>SMAP[s.id]=s);
+const TAGLABEL = {muscu:"Muscu",force:"Force",grip:"Grip",cardio:"Cardio",skill:"Skill",recup:"Récup",hopital:"Hôpital"};
+const phColor = c => ({gray:"#8b95a5",green:"#3ddc84",blue:"#6fb3ff",orange:"#ff8a3c",purple:"#c792ea"}[c]||"#2a2f3a");
+
+// ---- standalone bootstrap ----
+document.body.classList.add("progmode");
+const prog = document.getElementById("prog");
+let progBuilt=false, curTab="cal", curFilter="all", selDay=null;
+
+function sessionCardHTML(s, open){
+  if(!s) return "";
+  let h = '<details class="sesscard"'+(open?" open":"")+'><summary>'
+    + '<span class="tagbadge t-'+s.tag+'">'+pe(TAGLABEL[s.tag]||s.tag)+'</span>'
+    + '<span class="sname">'+pe(s.name)+'</span>'
+    + '<span class="sdur">'+pe(s.focus)+' · '+s.duration+"′</span></summary>";
+  for(const b of s.blocks){
+    h += '<div class="sblock"><h5>'+pe(b.label)+'</h5><ul>';
+    for(const it of b.items){ h += '<li>'+pe(it)+'</li>'; }
+    h += '</ul></div>';
+  }
+  if(s.note) h += '<div class="snote">💡 '+pe(s.note)+'</div>';
+  if(s.videos && s.videos.length){
+    h += '<details class="vidannex"><summary>🎬 Vidéos d\'exécution WAATH ('+s.videos.length+')</summary><div class="vidlist">';
+    for(const v of s.videos){
+      h += '<a class="vidrow" href="'+pe(v.url)+'" target="_blank" rel="noopener"><span class="vplay">▶</span><span class="vname">'+pe(v.name)+'</span></a>';
+    }
+    h += '</div><div class="vidnote">Démonstrations issues des programmations WAATH (APEX / Hepburn). Certains mouvements du corps de séance n\'ont pas de vidéo WAATH dédiée et ne sont pas listés ici.</div></details>';
+  }
+  h += '</details>';
+  return h;
+}
+
+function buildProg(){
+  const m = PROG.meta;
+  let h = '<div class="phdr"><h2>'+pe(m.title)+'</h2><div class="sub">'+pe(m.subtitle)+'</div>';
+  h += '<div class="chips">'+ m.goals.map(g=>'<span class="chip">🎯 '+pe(g)+'</span>').join("") +'</div>';
+  h += '<div class="chips">'+ m.equipment.map(e=>'<span class="chip">'+pe(e)+'</span>').join("") +'</div>';
+  h += '<div class="reg">⚖️ '+pe(PROG.regulation)+'</div></div>';
+  h += '<div class="phasestrip">';
+  for(const p of PROG.phases){
+    h += '<div class="phase" style="border-top-color:'+phColor(p.color)+'"><b>'+pe(p.name)+'</b>'
+       + '<span class="days">'+pe(p.days)+'</span><div class="goal">'+pe(p.goal)+'</div></div>';
+  }
+  h += '</div>';
+  h += '<div class="subtabs">'
+     + '<button data-t="cal" class="active">📅 Calendrier 28 j</button>'
+     + '<button data-t="bank">🗂️ Banque de séances</button>'
+     + '<button data-t="du">🎯 Double-Unders</button>'
+     + '<button data-t="grip">✊ Grip</button></div>';
+  h += '<div id="progbody"></div>';
+  prog.innerHTML = h;
+  prog.querySelectorAll(".subtabs button").forEach(b=>b.onclick=()=>{
+    prog.querySelectorAll(".subtabs button").forEach(x=>x.classList.remove("active")); b.classList.add("active");
+    curTab=b.dataset.t; renderTab();
+  });
+  renderTab();
+}
+
+function renderTab(){
+  const body = document.getElementById("progbody");
+  if(curTab==="cal"){ body.innerHTML = calHTML(); wireCal(); }
+  else if(curTab==="bank"){ body.innerHTML = bankHTML(); wireBank(); }
+  else if(curTab==="du"){ body.innerHTML = duHTML(); wireDu(); }
+  else if(curTab==="grip"){ body.innerHTML = gripHTML(); }
+}
+
+// ---- Calendar ----
+function calHTML(){
+  const total = PROG.calendar.length;
+  const done = PROG.calendar.filter(d=>PS.days[d.day]).length;
+  const pct = Math.round(done/total*100);
+  let h = '<div style="color:var(--muted);font-size:13px">Progression : <b style="color:var(--ok)">'+done+'</b> / '+total+' jours · '+pct+'%</div>';
+  h += '<div class="progbar"><i style="width:'+pct+'%"></i></div>';
+  h += '<div class="daygrid">';
+  for(const d of PROG.calendar){
+    const ph = PROG.phases.find(p=>p.id===d.phase) || {name:"",color:"gray"};
+    const isDone = !!PS.days[d.day];
+    h += '<div class="daycard'+(isDone?' done':'')+(selDay===d.day?' sel':'')+'" data-day="'+d.day+'">'
+       + '<div class="dnum"><span>J'+d.day+' · <span style="color:'+phColor(ph.color)+'">'+pe(ph.name)+'</span></span><span>'+(isDone?'✓':'')+'</span></div>'
+       + '<div class="dtitle">'+pe(d.title)+'</div><div class="sesschips">'
+       + d.sessions.map(sid=>{const s=SMAP[sid];return s?'<span class="tagbadge t-'+s.tag+'">'+pe(s.name)+'</span>':'';}).join("")
+       + '</div></div>';
+  }
+  h += '</div><div id="daydetail"></div>';
+  return h;
+}
+function wireCal(){
+  prog.querySelectorAll(".daycard").forEach(c=>c.onclick=()=>{
+    selDay = parseInt(c.dataset.day,10); showDayDetail();
+    prog.querySelectorAll(".daycard").forEach(x=>x.classList.toggle("sel", x===c));
+  });
+  if(selDay) showDayDetail();
+}
+function showDayDetail(){
+  const d = PROG.calendar.find(x=>x.day===selDay); if(!d) return;
+  const det = document.getElementById("daydetail");
+  const isDone = !!PS.days[selDay];
+  let h = '<div class="detailhdr"><h3>J'+d.day+' — '+pe(d.title)+'</h3>'
+        + '<button class="donebtn'+(isDone?' on':'')+'" id="daydone"><span>'+(isDone?'Jour terminé ✓':'Marquer le jour comme fait')+'</span></button></div>';
+  for(const sid of d.sessions){ h += sessionCardHTML(SMAP[sid], true); }
+  det.innerHTML = h; det.scrollIntoView({block:"nearest"});
+  document.getElementById("daydone").onclick=()=>{
+    if(PS.days[selDay]) delete PS.days[selDay]; else PS.days[selDay]=true;
+    psave(); renderTab();
+  };
+}
+
+// ---- Session bank ----
+function bankHTML(){
+  const tags = ["all","muscu","force","grip","cardio","skill","recup","hopital"];
+  let h = '<div class="bankfilter">';
+  for(const t of tags){ h += '<button data-f="'+t+'"'+(curFilter===t?' class="active"':'')+'>'+(t==="all"?"Toutes":(TAGLABEL[t]||t))+'</button>'; }
+  h += '</div><div id="banklist">'+bankListHTML()+'</div>';
+  return h;
+}
+function bankListHTML(){
+  const list = PROG.sessions.filter(s=>curFilter==="all"||s.tag===curFilter);
+  return list.map(s=>sessionCardHTML(s,false)).join("") || '<p class="empty">Aucune séance.</p>';
+}
+function wireBank(){
+  prog.querySelectorAll(".bankfilter button").forEach(b=>b.onclick=()=>{
+    curFilter=b.dataset.f;
+    prog.querySelectorAll(".bankfilter button").forEach(x=>x.classList.toggle("active",x===b));
+    document.getElementById("banklist").innerHTML = bankListHTML();
+  });
+}
+
+// ---- Double-Unders ----
+function duHTML(){
+  const du = PROG.doubleUnder;
+  let h = '<div class="reg">Niveau de départ : <b>'+pe(du.current)+'</b>. Objectif fin de cycle : séries de 15-20 double-unders fiables. Travail <b>à froid</b>, en micro-doses quotidiennes.</div>';
+  // record tracker
+  const best = duBest();
+  const today = new Date().toISOString().slice(0,10);
+  h += '<div class="seclabel">📈 Ton record d\'enchaînés</div>';
+  h += '<div class="durec"><span>Meilleure série du jour :</span>'
+     + '<input type="number" id="dunum" min="0" placeholder="ex. 7" value="'+(PS.du[today]||"")+'">'
+     + '<button id="dusave">Enregistrer</button>'
+     + '<span>Record all-time : <span class="dubest">'+best+'</span> DU</span>'
+     + '<div class="duhist" id="duhist">'+duHistHTML()+'</div></div>';
+  // weekly goals
+  h += '<div class="seclabel">🗓️ Objectifs semaine par semaine</div>';
+  h += '<table class="dutable"><tr><th>Semaine</th><th>Focus</th><th>Objectif mesurable</th></tr>';
+  for(const w of du.weeks){ h += '<tr><td>S'+w.week+'</td><td>'+pe(w.focus)+'</td><td>'+pe(w.goal)+'</td></tr>'; }
+  h += '</table>';
+  h += '<div class="seclabel">🪜 Drills progressifs (dans l\'ordre)</div><ol class="drills">';
+  for(const d of du.drills){ h += '<li>'+pe(d)+'</li>'; }
+  h += '</ol>';
+  h += '<div class="seclabel">🎯 Points techniques (cues)</div><ul class="cues">';
+  for(const c of du.cues){ h += '<li>'+pe(c)+'</li>'; }
+  h += '</ul>';
+  return h;
+}
+function duBest(){ let b=0; for(const k in PS.du){ b=Math.max(b, PS.du[k]||0); } return b; }
+function duHistHTML(){
+  const keys = Object.keys(PS.du).sort().slice(-7).reverse();
+  if(!keys.length) return "Aucun enregistrement pour l'instant.";
+  return "Historique : " + keys.map(k=>k.slice(5)+" → "+PS.du[k]).join(" · ");
+}
+function wireDu(){
+  const btn = document.getElementById("dusave"); if(!btn) return;
+  btn.onclick=()=>{
+    const v = parseInt(document.getElementById("dunum").value,10);
+    if(isNaN(v)||v<0) return;
+    PS.du[new Date().toISOString().slice(0,10)] = v; psave();
+    renderTab();
+  };
+}
+
+// ---- Grip ----
+function gripHTML(){
+  let h = '<div class="reg">Grip travaillé sur 3 familles : <b>support/suspension</b> (hangs), <b>crushing</b> (bottoms-up, carries), <b>pinch</b> (sandbag). Placé en fin de séance tirage ou en mini-séance dédiée 2×/semaine.</div>';
+  h += '<table class="gtable"><tr><th>Semaine</th><th>Suspension (hang)</th><th>Carry</th><th>Crushing / Pinch</th></tr>';
+  for(const g of PROG.gripProgression){
+    h += '<tr><td><b>S'+g.week+'</b></td><td>'+pe(g.hang)+'</td><td>'+pe(g.carry)+'</td><td>'+pe(g.other)+'</td></tr>';
+  }
+  h += '</table>';
+  return h;
+}
+
+buildProg();
+
+})();
+
+</script>
+</body>
+</html>
