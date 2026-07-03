@@ -3,9 +3,10 @@
 App autonome hébergée sur GitHub Pages :
 **https://sharpdev-admin.github.io/waath-programme/**
 
-Programme hybride 4 semaines (congé paternité) — muscle + force + grip + skill double-unders.
-5 phases (dont phase hôpital sans matériel), calendrier 28 jours, banque de 27 séances de
-15-20 min, tracker double-unders, progression grip, et annexe de vidéos d'exécution WAATH.
+Programme hybride 4 semaines (congé paternité) — muscle + force + grip + skill double-unders + abs every day.
+5 phases (dont phase hôpital sans matériel), calendrier 28 jours, banque de 29 séances de
+15-20 min, tracker double-unders, progression grip, onglet Abs Every Day (30 séances de core en
+checklist « cherry-pick », 4×/semaine en warmup + finisher), et annexe de vidéos d'exécution WAATH.
 
 ## Modifier le programme (via Claude Code sur iOS)
 
@@ -30,5 +31,5 @@ Programme hybride 4 semaines (congé paternité) — muscle + force + grip + ski
 ## Notes
 
 - Les liens « Vidéos d'exécution WAATH » pointent vers les vraies vidéos YouTube WAATH.
-- La progression (jours faits, records double-unders) est stockée en localStorage sur l'appareil.
+- La progression (jours faits, records double-unders, séances abs cochées) est stockée en localStorage sur l'appareil.
 - Source complète (scripts de build, wiki, analyses des agents) : repo privé `Personal-WAATH`.

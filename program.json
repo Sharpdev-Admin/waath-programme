@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "WAATH Hybride — Congé Paternité",
-    "subtitle": "4 semaines · muscle + force + grip · skill double-unders · séances 15-20 min",
+    "subtitle": "4 semaines · muscle + force + grip · skill double-unders · séances 15-20 min · abs every day",
     "durationDays": 28,
     "goals": [
       "muscle",
@@ -9,7 +9,8 @@
       "grip",
       "pectoraux",
       "jambes",
-      "double-unders"
+      "double-unders",
+      "abdos"
     ],
     "equipment": [
       "2× KB 12 kg",
@@ -67,31 +68,39 @@
         {
           "slot": "Lun",
           "sessions": [
+            "abs-warmup",
             "du-skill",
             "muscu-jambes",
-            "grip-mini"
+            "grip-mini",
+            "abs-finisher"
           ]
         },
         {
           "slot": "Mar",
           "sessions": [
+            "abs-warmup",
             "du-skill",
             "muscu-pecs",
-            "rameur-z2"
+            "rameur-z2",
+            "abs-finisher"
           ]
         },
         {
           "slot": "Mer",
           "sessions": [
+            "abs-warmup",
             "du-skill",
-            "muscu-pull"
+            "muscu-pull",
+            "abs-finisher"
           ]
         },
         {
           "slot": "Jeu",
           "sessions": [
+            "abs-warmup",
             "du-skill",
-            "muscu-push-vertical"
+            "muscu-push-vertical",
+            "abs-finisher"
           ]
         },
         {
@@ -129,31 +138,39 @@
         {
           "slot": "Lun",
           "sessions": [
+            "abs-warmup",
             "du-skill",
             "force-jambes",
-            "grip-mini"
+            "grip-mini",
+            "abs-finisher"
           ]
         },
         {
           "slot": "Mar",
           "sessions": [
+            "abs-warmup",
             "du-skill",
             "force-pecs",
-            "rameur-z2"
+            "rameur-z2",
+            "abs-finisher"
           ]
         },
         {
           "slot": "Mer",
           "sessions": [
+            "abs-warmup",
             "du-skill",
-            "force-tirage-grip"
+            "force-tirage-grip",
+            "abs-finisher"
           ]
         },
         {
           "slot": "Jeu",
           "sessions": [
+            "abs-warmup",
             "du-skill",
-            "force-push-vertical"
+            "force-push-vertical",
+            "abs-finisher"
           ]
         },
         {
@@ -191,31 +208,39 @@
         {
           "slot": "Lun",
           "sessions": [
+            "abs-warmup",
             "du-skill",
             "muscu-jambes",
-            "grip-mini"
+            "grip-mini",
+            "abs-finisher"
           ]
         },
         {
           "slot": "Mar",
           "sessions": [
+            "abs-warmup",
             "du-skill",
             "muscu-pecs",
-            "rameur-z2"
+            "rameur-z2",
+            "abs-finisher"
           ]
         },
         {
           "slot": "Mer",
           "sessions": [
+            "abs-warmup",
             "du-skill",
-            "force-tirage-grip"
+            "force-tirage-grip",
+            "abs-finisher"
           ]
         },
         {
           "slot": "Jeu",
           "sessions": [
+            "abs-warmup",
             "du-skill",
-            "force-push-vertical"
+            "force-push-vertical",
+            "abs-finisher"
           ]
         },
         {
@@ -1448,6 +1473,68 @@
           "url": "https://youtu.be/W78q6P0kejQ"
         }
       ]
+    },
+    {
+      "id": "abs-warmup",
+      "name": "Abs — Réveil sangle (warmup)",
+      "tag": "abs",
+      "focus": "Core",
+      "duration": 4,
+      "phases": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "Activation core (3-4 min, à froid)",
+          "items": [
+            "30 s dead bug alterné — lombaires plaquées au sol, lent",
+            "30 s hollow hold (hollow tuck genoux repliés si trop dur)",
+            "20 s side plank / côté",
+            "10 slow crunch + 10 bird-dog / côté"
+          ]
+        }
+      ],
+      "note": "Réveil de la sangle avant la séance : gainage lent et respiration, zéro fatigue. Prépare le tronc pour la muscu/force, ce n'est pas encore le finisher abs.",
+      "videos": [
+        {
+          "name": "Alternating Dead Bug",
+          "url": "https://youtu.be/PG4EdAwCAPw"
+        },
+        {
+          "name": "Hollow Hold",
+          "url": "https://youtu.be/7KhulaH8Syg"
+        },
+        {
+          "name": "Side Plank",
+          "url": "https://youtu.be/Z91EziQmfR0"
+        }
+      ]
+    },
+    {
+      "id": "abs-finisher",
+      "name": "Abs — Finisher (pioche du jour)",
+      "tag": "abs",
+      "focus": "Core",
+      "duration": 13,
+      "phases": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "blocks": [
+        {
+          "label": "En fin de séance (10-15 min)",
+          "items": [
+            "Ouvre l'onglet 🔥 Abs Every Day et pioche LA séance du jour (dans l'ordre 1→30, ou au feeling).",
+            "Fais-la en entier — chaque séance a son propre format (EMOM, rounds, échelle…).",
+            "Coche-la dans la liste : objectif boucler les 30. Toutes les vidéos d'exécution sont dans l'onglet."
+          ]
+        }
+      ],
+      "note": "30 formats différents, jamais deux fois le même. Adapte le matériel (plate→KB, GHD→sit-up sol, TRX→gainage sol) selon ce que tu as sous la main. 4 séances/semaine dans ce programme.",
+      "videos": []
     }
   ],
   "calendar": [
@@ -1501,9 +1588,11 @@
       "phase": "p1",
       "title": "Jambes hypertrophie + grip",
       "sessions": [
+        "abs-warmup",
         "du-skill",
         "muscu-jambes",
-        "grip-mini"
+        "grip-mini",
+        "abs-finisher"
       ]
     },
     {
@@ -1511,9 +1600,11 @@
       "phase": "p1",
       "title": "Pecs pump + rameur Z2",
       "sessions": [
+        "abs-warmup",
         "du-skill",
         "muscu-pecs",
-        "rameur-z2"
+        "rameur-z2",
+        "abs-finisher"
       ]
     },
     {
@@ -1521,8 +1612,10 @@
       "phase": "p1",
       "title": "Pull dos + biceps + grip",
       "sessions": [
+        "abs-warmup",
         "du-skill",
-        "muscu-pull"
+        "muscu-pull",
+        "abs-finisher"
       ]
     },
     {
@@ -1530,8 +1623,10 @@
       "phase": "p1",
       "title": "Push vertical + triceps",
       "sessions": [
+        "abs-warmup",
         "du-skill",
-        "muscu-push-vertical"
+        "muscu-push-vertical",
+        "abs-finisher"
       ]
     },
     {
@@ -1567,9 +1662,11 @@
       "phase": "p2",
       "title": "Force jambes (Hepburn) + grip",
       "sessions": [
+        "abs-warmup",
         "du-skill",
         "force-jambes",
-        "grip-mini"
+        "grip-mini",
+        "abs-finisher"
       ]
     },
     {
@@ -1577,9 +1674,11 @@
       "phase": "p2",
       "title": "Force pecs + rameur Z2",
       "sessions": [
+        "abs-warmup",
         "du-skill",
         "force-pecs",
-        "rameur-z2"
+        "rameur-z2",
+        "abs-finisher"
       ]
     },
     {
@@ -1587,8 +1686,10 @@
       "phase": "p2",
       "title": "Force tirage + grip",
       "sessions": [
+        "abs-warmup",
         "du-skill",
-        "force-tirage-grip"
+        "force-tirage-grip",
+        "abs-finisher"
       ]
     },
     {
@@ -1596,8 +1697,10 @@
       "phase": "p2",
       "title": "Force poussée verticale",
       "sessions": [
+        "abs-warmup",
         "du-skill",
-        "force-push-vertical"
+        "force-push-vertical",
+        "abs-finisher"
       ]
     },
     {
@@ -1633,9 +1736,11 @@
       "phase": "p3",
       "title": "Jambes pic (deficit/EMOM) + grip",
       "sessions": [
+        "abs-warmup",
         "du-skill",
         "muscu-jambes",
-        "grip-mini"
+        "grip-mini",
+        "abs-finisher"
       ]
     },
     {
@@ -1643,9 +1748,11 @@
       "phase": "p3",
       "title": "Pecs pic (deficit+pause) + rameur Z2",
       "sessions": [
+        "abs-warmup",
         "du-skill",
         "muscu-pecs",
-        "rameur-z2"
+        "rameur-z2",
+        "abs-finisher"
       ]
     },
     {
@@ -1653,8 +1760,10 @@
       "phase": "p3",
       "title": "Force tirage + grip",
       "sessions": [
+        "abs-warmup",
         "du-skill",
-        "force-tirage-grip"
+        "force-tirage-grip",
+        "abs-finisher"
       ]
     },
     {
@@ -1662,8 +1771,10 @@
       "phase": "p3",
       "title": "Force poussée verticale",
       "sessions": [
+        "abs-warmup",
         "du-skill",
-        "force-push-vertical"
+        "force-push-vertical",
+        "abs-finisher"
       ]
     },
     {
@@ -1780,5 +1891,782 @@
       "carry": "Bear-hug 50 + offset ; décharge",
       "other": "Bottoms-up press test (16) ; pinch max hold"
     }
-  ]
+  ],
+  "absEveryDay": {
+    "intro": "30 séances de renforcement de la sangle abdominale (flexion / rotation / inclinaison), ≤ 15 min chacune, + de 70 exos différents. Pioche-en une comme finisher, coche-la, et enchaîne les 30 sans jamais refaire le même format.",
+    "rule": "Dans ce programme : 4×/semaine. Core en activation (warmup) au début de séance, puis une séance piochée ici en finisher. Coche celles que tu fais — objectif : boucler les 30.",
+    "adapt": "Matériel maison : Plate → KB ou disque · GHD → sit-up / hollow au sol · Barre → KB ou sandbag · TRX/Anneaux → gainage & tuck au sol · Paralettes → sol ou chaises · Medball → KB léger. Garde le format (rounds / reps / EMOM), change juste l'outil.",
+    "sessions": [
+      {
+        "n": 1,
+        "title": "Séance 1",
+        "format": "6 Rounds of :",
+        "work": [
+          "6 Rounds of :",
+          "12 Plate OH Sit Ups",
+          "12 Plate Russian Twists",
+          "12'' Plate OH Hollow Hold",
+          "Every Round unbroken",
+          "Rest as needed between rounds",
+          "* Plate 10kg"
+        ],
+        "equip": "Disque/plate (→ KB)",
+        "videos": [
+          {
+            "name": "Plate OH Sit Ups",
+            "url": "https://youtu.be/u29-HRaGlnE"
+          },
+          {
+            "name": "Plate Russian Twists",
+            "url": "https://youtu.be/l74J78_oqgQ"
+          },
+          {
+            "name": "Plate OH Hollow Hold",
+            "url": "https://youtu.be/WQRd92lWBJk"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Séance 2",
+        "format": "EMOM 15'",
+        "work": [
+          "EMOM 15'",
+          "1 : 1' Plank",
+          "2 : 1' Side Plank Left",
+          "3 : 1' Side Plank Right",
+          "4 : 12-15 Roll out",
+          "5 : Rest"
+        ],
+        "equip": "Poids du corps + roue abdo",
+        "videos": [
+          {
+            "name": "Plank",
+            "url": "https://youtu.be/CXP5-yOuKYE"
+          },
+          {
+            "name": "Side Plank",
+            "url": "https://youtu.be/Z91EziQmfR0"
+          },
+          {
+            "name": "Roll out",
+            "url": "https://youtu.be/FqNwYz-mwsg"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Séance 3",
+        "format": "5 Rounds For Time :",
+        "work": [
+          "5 Rounds For Time :",
+          "20 Crossing V-Ups",
+          "10 V-Ups",
+          "10 Crossing Toes to Bar",
+          "10 Toes to Bar"
+        ],
+        "equip": "Barre de traction",
+        "videos": [
+          {
+            "name": "Crossing V-Ups",
+            "url": "https://youtu.be/X0H33ifTDys"
+          },
+          {
+            "name": "V-Ups",
+            "url": "https://youtu.be/M6zuCKfWhUc"
+          },
+          {
+            "name": "Crossing Toes to Bar",
+            "url": "https://youtu.be/drBjruu28Lw"
+          },
+          {
+            "name": "Toes to Bar",
+            "url": "https://youtu.be/1aSoKQSQH7o"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Séance 4",
+        "format": "50-40-30-20-10",
+        "work": [
+          "50-40-30-20-10",
+          "Mountain climbers",
+          "Hollow Flutter kicks",
+          "For Time"
+        ],
+        "equip": "Poids du corps",
+        "videos": [
+          {
+            "name": "Mountain climbers",
+            "url": "https://youtu.be/MyWObpw5OBQ"
+          },
+          {
+            "name": "Hollow Flutter kicks",
+            "url": "https://youtu.be/5Kt0YcTwULk"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Séance 5",
+        "format": "For Time",
+        "work": [
+          "For Time",
+          "200 Barbell Side Bend",
+          "200 Russian Twists",
+          "Manage your sets and number of reps"
+        ],
+        "equip": "Barre (→ KB)",
+        "videos": [
+          {
+            "name": "Barbell Side Bend",
+            "url": "https://youtu.be/XUzO9B9oTi4"
+          },
+          {
+            "name": "Russian Twists",
+            "url": "https://youtu.be/a8YUcA3MDJg"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Séance 6",
+        "format": "4 Rounds Of :",
+        "work": [
+          "4 Rounds Of :",
+          "30 Alternating Dead Bug",
+          "15 Sit ups",
+          "20 Crossing Touch Toes in Plank",
+          "10 Rower pike ABS",
+          "Rest as needed between sets"
+        ],
+        "equip": "Poids du corps (+ rameur)",
+        "videos": [
+          {
+            "name": "Alternating Dead Bug",
+            "url": "https://youtu.be/PG4EdAwCAPw"
+          },
+          {
+            "name": "Sit ups",
+            "url": "https://youtu.be/qRup7QQ2O9A"
+          },
+          {
+            "name": "Crossing Touch Toes in Plank",
+            "url": "https://youtu.be/gK0NM2SDmS0"
+          },
+          {
+            "name": "Rower pike ABS",
+            "url": "https://youtu.be/H0y0_QV4SJA"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Séance 7",
+        "format": "2-4-6-8-10-12-14-16–18-20",
+        "work": [
+          "2-4-6-8-10-12-14-16–18-20",
+          "Plate OH Crunch",
+          "Plate OH Candle ABS",
+          "For Time"
+        ],
+        "equip": "Disque/plate (→ KB)",
+        "videos": [
+          {
+            "name": "Plate OH Crunch",
+            "url": "https://youtu.be/e2OQA184eQ0"
+          },
+          {
+            "name": "Plate OH Candle ABS",
+            "url": "https://youtu.be/l4Z3ZccX8Fc"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Séance 8",
+        "format": "5 Rounds of :",
+        "work": [
+          "5 Rounds of :",
+          "10 GHD Sit Ups",
+          "10'' Hold",
+          "10 GHD Sit Ups",
+          "Every round unbroken",
+          "Rest as needed between round"
+        ],
+        "equip": "GHD (→ sit-up sol)",
+        "videos": [
+          {
+            "name": "GHD Sit Ups",
+            "url": "https://youtu.be/bquUk5R-dD4"
+          },
+          {
+            "name": "' Hold",
+            "url": "https://youtu.be/tjAgYI63M9o"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Séance 9",
+        "format": "20'' ON - 10'' OFF X 15",
+        "work": [
+          "20'' ON - 10'' OFF X 15",
+          "Alternate",
+          "Leg lift",
+          "Bicycle Crunch",
+          "Tuck Ups"
+        ],
+        "equip": "Poids du corps",
+        "videos": [
+          {
+            "name": "Leg lift",
+            "url": "https://youtu.be/zX-n5xTALq0"
+          },
+          {
+            "name": "Bicycle Crunch",
+            "url": "https://youtu.be/A7Pt8R3DLX0"
+          },
+          {
+            "name": "Tuck Ups",
+            "url": "https://youtu.be/c3lRiqAMQXA"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Séance 10",
+        "format": "4 Rounds of :",
+        "work": [
+          "4 Rounds of :",
+          "30'' Crossing Plank R",
+          "30'' Crossing Plank L",
+          "Max Effort L-Sit",
+          "Rest as needed between sets"
+        ],
+        "equip": "Poids du corps",
+        "videos": [
+          {
+            "name": "Crossing Plank",
+            "url": "https://youtu.be/E6MdEca0XNY"
+          },
+          {
+            "name": "L-Sit",
+            "url": "https://youtu.be/o9hhJjtvUH0"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "Séance 11",
+        "format": "50-40-30-20",
+        "work": [
+          "50-40-30-20",
+          "Seated Leg Lift Over",
+          "25-20-15-10",
+          "Plate Hollow Pull Over",
+          "20-15-10-5",
+          "TRX/Ring Body Saw"
+        ],
+        "equip": "Disque + TRX/anneaux",
+        "videos": [
+          {
+            "name": "Seated Leg Lift Over",
+            "url": "https://youtu.be/1IE_1LaHcZA"
+          },
+          {
+            "name": "Plate Hollow Pull Over",
+            "url": "https://youtu.be/BigNd87dyyA"
+          },
+          {
+            "name": "TRX/Ring Body Saw",
+            "url": "https://youtu.be/5LuVCIebVsI"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "Séance 12",
+        "format": "4 Rounds of :",
+        "work": [
+          "4 Rounds of :",
+          "20 TRX/Ring Tuck Ups",
+          "20 TRX/Ring Lateral Tuck Ups",
+          "40 TRX/Ring Mountain Climbers",
+          "Each round unbroken",
+          "Rest as needed between sets"
+        ],
+        "equip": "TRX/anneaux",
+        "videos": [
+          {
+            "name": "TRX/Ring Tuck Ups",
+            "url": "https://youtu.be/S5aVR9dLDhU"
+          },
+          {
+            "name": "TRX/Ring Lateral Tuck Ups",
+            "url": "https://youtu.be/Q_YMt9CDmVc"
+          },
+          {
+            "name": "TRX/Ring Mountain Climbers",
+            "url": "https://youtu.be/XX-73gr9slM"
+          }
+        ]
+      },
+      {
+        "n": 13,
+        "title": "Séance 13",
+        "format": "4 Rounds of :",
+        "work": [
+          "4 Rounds of :",
+          "20 Walking Barbell Rotation",
+          "20/side Banded Pallof Rotation",
+          "20 Hanging L-Sit Flutter Kicks"
+        ],
+        "equip": "Barre + élastique + barre de traction",
+        "videos": [
+          {
+            "name": "Walking Barbell Rotation",
+            "url": "https://youtu.be/DvCZt42pmPw"
+          },
+          {
+            "name": "Banded Pallof Rotation",
+            "url": "https://youtu.be/ljQ8YbzUMZs"
+          },
+          {
+            "name": "Hanging L-Sit Flutter Kicks",
+            "url": "https://youtu.be/J14HvmoEROA"
+          }
+        ]
+      },
+      {
+        "n": 14,
+        "title": "Séance 14",
+        "format": "6 Rounds of :",
+        "work": [
+          "6 Rounds of :",
+          "10 GHD Hold Chest Press",
+          "10 GHD Hold Driver",
+          "10 GHD OH Plate Sit ups",
+          "Each Round Unbroken",
+          "Rest as needed between sets"
+        ],
+        "equip": "GHD + disque (→ sol)",
+        "videos": [
+          {
+            "name": "GHD Hold Chest Press",
+            "url": "https://youtu.be/AJ2wRIVwRLA"
+          },
+          {
+            "name": "GHD Hold Driver",
+            "url": "https://youtu.be/IkV2b22vdBs"
+          },
+          {
+            "name": "GHD OH Plate Sit ups",
+            "url": "https://youtu.be/9iJy18WNTCU"
+          }
+        ]
+      },
+      {
+        "n": 15,
+        "title": "Séance 15",
+        "format": "12*10*8*6*4*2",
+        "work": [
+          "12*10*8*6*4*2",
+          "Barbell Roll Out",
+          "* Between each set",
+          "20 Medball Sit ups"
+        ],
+        "equip": "Barre + medball (→ KB)",
+        "videos": [
+          {
+            "name": "Barbell Roll Out",
+            "url": "https://youtu.be/mgo3FuubTLk"
+          },
+          {
+            "name": "20 Medball Sit ups",
+            "url": "https://youtu.be/yM8ysxgrxzM"
+          }
+        ]
+      },
+      {
+        "n": 16,
+        "title": "Séance 16",
+        "format": "7 Rounds of :",
+        "work": [
+          "7 Rounds of :",
+          "14 Crossing V-Ups",
+          "14 Hollow rocks",
+          "14sec Hollow hold",
+          "Each round unbroken and rest as needed between sets"
+        ],
+        "equip": "Poids du corps",
+        "videos": [
+          {
+            "name": "Crossing V-Ups",
+            "url": "https://youtu.be/X0H33ifTDys"
+          },
+          {
+            "name": "Hollow rocks",
+            "url": "https://youtu.be/LXkBszS7DgY"
+          },
+          {
+            "name": "Hollow hold",
+            "url": "https://youtu.be/7KhulaH8Syg"
+          }
+        ]
+      },
+      {
+        "n": 17,
+        "title": "Séance 17",
+        "format": "30-25-20-15-10",
+        "work": [
+          "30-25-20-15-10",
+          "KB Side Bend (each side)",
+          "One arm KB OH Crunch (each side)",
+          "KB Russian Twists"
+        ],
+        "equip": "Kettlebell",
+        "videos": [
+          {
+            "name": "KB Side Bend",
+            "url": "https://youtu.be/ZGjUW5-f_Uk"
+          },
+          {
+            "name": "One arm KB OH Crunch",
+            "url": "https://youtu.be/LPlLHrnxWkM"
+          },
+          {
+            "name": "KB Russian Twists",
+            "url": "https://youtu.be/n3nl5x2paRo"
+          }
+        ]
+      },
+      {
+        "n": 18,
+        "title": "Séance 18",
+        "format": "20-18-16-14-12-10-8-6-4-2",
+        "work": [
+          "20-18-16-14-12-10-8-6-4-2",
+          "Tuck Ups no floor",
+          "2-4-6-8-10-12-14-16-18-20",
+          "Seconds in Hanging L-Sit",
+          "Passez en Hanging L-Sit (half) si c'est trop dur"
+        ],
+        "equip": "Barre de traction",
+        "videos": [
+          {
+            "name": "Tuck Ups no floor",
+            "url": "https://youtu.be/Q_wG__tnKEE"
+          },
+          {
+            "name": "Hanging L-Sit",
+            "url": "https://youtu.be/ZZcyJbjqEKo"
+          },
+          {
+            "name": "Hanging L-Sit (half)",
+            "url": "https://youtu.be/HTgXgC0WPb8"
+          }
+        ]
+      },
+      {
+        "n": 19,
+        "title": "Séance 19",
+        "format": "4 Rounds of :",
+        "work": [
+          "4 Rounds of :",
+          "40 Alternating Leg lifts",
+          "20 Kneeling Landmine Twists",
+          "20''/side One Arm TRX/Ring Supported Plank"
+        ],
+        "equip": "TRX/anneaux + landmine (→ KB)",
+        "videos": [
+          {
+            "name": "Alternating Leg lifts",
+            "url": "https://youtu.be/bbbZajHCIq0"
+          },
+          {
+            "name": "Kneeling Landmine Twists",
+            "url": "https://youtu.be/SaX_aKPD0wU"
+          },
+          {
+            "name": "One Arm TRX/Ring Supported Plank",
+            "url": "https://youtu.be/z8plqwZCZ18"
+          }
+        ]
+      },
+      {
+        "n": 20,
+        "title": "Séance 20",
+        "format": "5 Rounds of :",
+        "work": [
+          "5 Rounds of :",
+          "10 Paralette Shoot Throughs",
+          "5 Plank Walk Out",
+          "10/side Lateral V-Ups"
+        ],
+        "equip": "Paralettes (→ sol/chaises)",
+        "videos": [
+          {
+            "name": "Paralette Shoot Throughs",
+            "url": "https://youtu.be/0FPALzz9CBs"
+          },
+          {
+            "name": "Plank Walk Out",
+            "url": "https://youtu.be/sc3FRuFjtbU"
+          },
+          {
+            "name": "Lateral V-Ups",
+            "url": "https://youtu.be/4L_9Af_Ji5c"
+          }
+        ]
+      },
+      {
+        "n": 21,
+        "title": "Séance 21",
+        "format": "3 Rounds of :",
+        "work": [
+          "3 Rounds of :",
+          "50 2KB Hollow Flutter Kicks",
+          "25/25 Lateral Wall Slams",
+          "20 Alternating Bear Plank Cross Raises"
+        ],
+        "equip": "2 KB + wall ball",
+        "videos": [
+          {
+            "name": "2KB Hollow Flutter Kicks",
+            "url": "https://youtu.be/Ux0iIn0yRv8"
+          },
+          {
+            "name": "Lateral Wall Slams",
+            "url": "https://youtu.be/2tRBExcEdS4"
+          },
+          {
+            "name": "Alternating Bear Plank Cross Raises",
+            "url": "https://youtu.be/xD0g9Z5yl5w"
+          }
+        ]
+      },
+      {
+        "n": 22,
+        "title": "Séance 22",
+        "format": "10-9-8-7-6-5-4-3-2-1",
+        "work": [
+          "10-9-8-7-6-5-4-3-2-1",
+          "Landmine Turkish Sit Ups / side",
+          "Complex Tuck ups 1 + 1 + 1",
+          "Complex",
+          "1 One leg Tuck up L",
+          "1 One leg Tuck up R",
+          "1 Tuck Up"
+        ],
+        "equip": "Landmine (→ KB)",
+        "videos": [
+          {
+            "name": "Landmine Turkish Sit Ups",
+            "url": "https://youtu.be/5ZE7ZemVAEY"
+          },
+          {
+            "name": "Complex Tuck ups 1 + 1 + 1",
+            "url": "https://youtu.be/dtoROWGVFeU"
+          }
+        ]
+      },
+      {
+        "n": 23,
+        "title": "Séance 23",
+        "format": "6 Rounds of :",
+        "work": [
+          "6 Rounds of :",
+          "12 Crossing Knee Raises",
+          "24 Crossing Mountain Climbers",
+          "12 Bicycle Crunch",
+          "Each round unbroken",
+          "Rest as needed between sets"
+        ],
+        "equip": "Poids du corps",
+        "videos": [
+          {
+            "name": "Crossing Knee Raises",
+            "url": "https://youtu.be/k7tFd0m4QfM"
+          },
+          {
+            "name": "Crossing Mountain Climbers",
+            "url": "https://youtu.be/OGXcJS49Yos"
+          },
+          {
+            "name": "Bicycle Crunch",
+            "url": "https://youtu.be/A7Pt8R3DLX0"
+          }
+        ]
+      },
+      {
+        "n": 24,
+        "title": "Séance 24",
+        "format": "Tabata",
+        "work": [
+          "Tabata",
+          "Hollow Rocks",
+          "2' Rest",
+          "Tabata",
+          "Hollow Hold",
+          "TABATA : 20'' ON - 10'' OFF X 8"
+        ],
+        "equip": "Poids du corps",
+        "videos": [
+          {
+            "name": "Hollow Rocks",
+            "url": "https://youtu.be/LXkBszS7DgY"
+          },
+          {
+            "name": "Hollow Hold",
+            "url": "https://youtu.be/7KhulaH8Syg"
+          }
+        ]
+      },
+      {
+        "n": 25,
+        "title": "Séance 25",
+        "format": "4 Rounds of :",
+        "work": [
+          "4 Rounds of :",
+          "10-15 Knee Raises",
+          "10-15sec Hanging L-Sit Hold (half)",
+          "10-15 Knee Raises",
+          "Each round unbroken",
+          "Rest as needed between sets"
+        ],
+        "equip": "Barre de traction",
+        "videos": [
+          {
+            "name": "Knee Raises",
+            "url": "https://youtu.be/ehPrP4hRaR4"
+          },
+          {
+            "name": "Hanging L-Sit Hold (half)",
+            "url": "https://youtu.be/HTgXgC0WPb8"
+          }
+        ]
+      },
+      {
+        "n": 26,
+        "title": "Séance 26",
+        "format": "4 Rounds of :",
+        "work": [
+          "4 Rounds of :",
+          "5 Dragon Flag",
+          "10 Rower Pike ABS + Rower pike Tuck up",
+          "15/side Lateral Plank Rotation",
+          "1' Rest between sets"
+        ],
+        "equip": "Poids du corps (dragon flag)",
+        "videos": [
+          {
+            "name": "Dragon Flag",
+            "url": "https://youtu.be/DVj5v7q7RmA"
+          },
+          {
+            "name": "Rower Pike ABS + Rower pike Tuck up",
+            "url": "https://youtu.be/LkHaUbxhGsQ"
+          },
+          {
+            "name": "Lateral Plank Rotation",
+            "url": "https://youtu.be/qZ77FSpTWQw"
+          }
+        ]
+      },
+      {
+        "n": 27,
+        "title": "Séance 27",
+        "format": "6 Rounds of :",
+        "work": [
+          "6 Rounds of :",
+          "10 Roll Out",
+          "20 Press + Russian Twist Complex",
+          "Each round unbroken",
+          "30\" - 1' Rest"
+        ],
+        "equip": "Roue abdo + disque/KB",
+        "videos": [
+          {
+            "name": "Roll Out",
+            "url": "https://youtu.be/FqNwYz-mwsg"
+          },
+          {
+            "name": "Press + Russian Twist Complex",
+            "url": "https://youtu.be/-A0b5kjifok"
+          }
+        ]
+      },
+      {
+        "n": 28,
+        "title": "Séance 28",
+        "format": "5 Rounds of :",
+        "work": [
+          "5 Rounds of :",
+          "15 Knee Raises on Dips Support",
+          "20 Split Stance Barbell Side Bend (each side)"
+        ],
+        "equip": "Support dips + barre (→ KB)",
+        "videos": [
+          {
+            "name": "Knee Raises on Dips Support",
+            "url": "https://youtu.be/oD4IDVfif2A"
+          },
+          {
+            "name": "Split Stance Barbell Side Bend",
+            "url": "https://youtu.be/ei1i6bC05Tg"
+          }
+        ]
+      },
+      {
+        "n": 29,
+        "title": "Séance 29",
+        "format": "12 Rounds of :",
+        "work": [
+          "12 Rounds of :",
+          "40\" ON - 20\" OFF",
+          "High Side Plank Raises (each side)",
+          "OH Hollow Alt. Hold Leg Bend",
+          "Dynamic Plank"
+        ],
+        "equip": "Poids du corps",
+        "videos": [
+          {
+            "name": "High Side Plank Raises",
+            "url": "https://youtu.be/zVm15OqPxaE"
+          },
+          {
+            "name": "OH Hollow Alt. Hold Leg Bend",
+            "url": "https://youtu.be/DOOKWLyHvdI"
+          },
+          {
+            "name": "Dynamic Plank",
+            "url": "https://youtu.be/hKpWj9GwdeI"
+          }
+        ]
+      },
+      {
+        "n": 30,
+        "title": "Séance 30",
+        "format": "21-18-15-12-9-6-3",
+        "work": [
+          "21-18-15-12-9-6-3",
+          "Hollow Rocks",
+          "Wipers ABS"
+        ],
+        "equip": "Poids du corps",
+        "videos": [
+          {
+            "name": "Hollow Rocks",
+            "url": "https://youtu.be/LXkBszS7DgY"
+          },
+          {
+            "name": "Wipers ABS",
+            "url": "https://youtu.be/bShBN_4qvPw"
+          }
+        ]
+      }
+    ]
+  }
 }
